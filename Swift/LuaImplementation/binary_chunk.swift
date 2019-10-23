@@ -1,7 +1,7 @@
-typealias Byte = Byte
+
 struct Header {
     // 魔数 四个字节分别是 ESC、L、u、a，0x1B4C7561
-    let signature: [UInt] = [0x10, 0xB4, 0x75, 0x61]
+    let signature: [UInt8] = [0x10, 0xB4, 0x75, 0x61]
     // 版本号，加载文件时，判断版本是否一致，大版本号*16+小版本号，不管发布号
     let version: Byte = 0x53
     // 加载时会判断是否相同，不相同拒绝加载，Lua官方实现是0x00
@@ -57,7 +57,7 @@ struct Prototype {
     // 固定参数个数
     let NumParams: Byte
     // 是否是Vararg，0代表否，1代表是
-    let IsVarary Byte
+    let IsVarary: Byte
     // 寄存器数量
     let MaxStackSize: Byte
     // 指令表，占4个字节
@@ -65,7 +65,7 @@ struct Prototype {
     // 常量表，用于春芳Lua代码里出现的字面量，包括Nil，布尔值，整数，浮点数和字符串五种
     // 每个常量以1字节tag开头，用来表示后续存储的是哪种类型的常量值
     // 常用0x00 nil 不存储，0x01 bool 字节（0，1），0x03 number lua浮点，0x13 integer lua整数，0x04 string 短字符串，0x14 string 长字符串
-    let Constants [PrototypeConstantsTag]
+    let Constants: [PrototypeConstantsTag]
     // TODO: 第十章时补充
     let Upvalues: [Upvalue]
     // 子函数原型表
@@ -84,6 +84,6 @@ struct BinaryChunk {
     let mainFunc: Prototype
 }
 // TODO: 未完成
-func undump(data: Data) -> Prototype {
-
-}
+//func undump(data: Bytes) -> Prototype {
+//
+//}
