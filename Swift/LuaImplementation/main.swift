@@ -8,5 +8,16 @@
 
 import Foundation
 
-print("Hello, World!")
+func main() {
+    
+    guard let handle = FileHandle.init(forReadingAtPath: "/Users/alexzhu/Desktop/lua-5.3.5/luac.out") else {
+        fatalError("no file")
+    }
+    let data = handle.readDataToEndOfFile()
+    
+    let proto = BinaryChunk.undump(data: [UInt8](data))
+    print(proto)
+    
+}
 
+main()

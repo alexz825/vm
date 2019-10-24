@@ -3,9 +3,8 @@ import Foundation
 struct Reader {
     var data: Bytes
     
-    init() {
-        let data = Data()
-        self.data = Bytes.init(existingBytes: [UInt8](data))
+    init(data: Bytes) {
+        self.data = data
     }
 
     func readByte() -> Byte {
@@ -92,18 +91,63 @@ struct Reader {
                          Code: self.readCode(),
                          Constants: self.readConstants(),
                          Upvalues: self.readUpvalues(),
-                         Protos: self.read(Protos(source)),
+                         Protos: self.readProtos(parentSource: source),
                          LineInfo: self.readLineInfo(),
                          LocVars: self.readLocVars(),
                          UpvalueNames: self.readUpvalueNames())
     }
     // 读取指令表
     func readCode() -> [UInt32] {
-        return (0..<4).map({_ in self.readUInt32()})
+        return (UInt32(0)..<self.readUInt32()).map({_ in self.readUInt32()})
     }
     // 读取常量表
-    func readConstants() -> [PrototypeConstantsTag] {
-        
+    func readConstants() -> [Any?] {
+        return (UInt32(0)..<self.readUInt32()).map({ (tag) -> Any? in
+            return self.readConstant()
+        })
+    }
+    func readConstant() -> Any? {
+        let tag = PrototypeConstantsTag.init(rawValue: self.readByte()) ?? .nil_
+        switch tag {
+        case .nil_:
+            return nil
+        case .boolean:
+            return self.readByte() != 0
+        case .integer:
+            return self.readLuaInteger()
+        case .number:
+            return self.readLuaNumber()
+        case .shortStr:
+            return self.readString()
+        case .longStr:
+            return self.readString()
+        }
+    }
+    
+    func readUpvalues() -> [Upvalue] {
+        return (UInt32(0)..<self.readUInt32()).map { (i) -> Upvalue in
+            return Upvalue(Instack: self.readByte(), Idx: self.readByte())
+        }
+    }
+    
+    func readProtos(parentSource: String) -> [Prototype] {
+        return (UInt32(0)..<self.readUInt32()).map({ (_) -> Prototype in
+            return self.readProto(parentSource: parentSource)
+        })
+    }
+    
+    func readLineInfo() -> [UInt32] {
+        return (UInt32(0)..<self.readUInt32()).map({ _ in self.readUInt32()})
+    }
+    
+    func readLocVars() -> [LocVar] {
+        return (UInt32(0)..<self.readUInt32()).map({ _ in LocVar.init(varName: self.readString(),
+                                                                      startPC: self.readUInt32(),
+                                                                      endPC: self.readUInt32())})
+    }
+    
+    func readUpvalueNames() -> [String] {
+        return (UInt32(0)..<self.readUInt32()).map({ _ in self.readString()})
     }
 }
 

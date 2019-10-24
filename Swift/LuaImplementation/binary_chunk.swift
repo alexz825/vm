@@ -1,7 +1,7 @@
 
 struct Header {
     // 魔数 四个字节分别是 ESC、L、u、a，0x1B4C7561
-    let signature: [UInt8] = [0x10, 0xB4, 0x75, 0x61]
+    let signature: [UInt8] = Array.init("\u{0x1b}Lua".utf8) //[0x10, 0xB4, 0x75, 0x61]
     // 版本号，加载文件时，判断版本是否一致，大版本号*16+小版本号，不管发布号
     let version: Byte = 0x53
     // 加载时会判断是否相同，不相同拒绝加载，Lua官方实现是0x00
@@ -26,7 +26,7 @@ struct Header {
     let luacNum: Float64 = 370.5
 }
 
-enum PrototypeConstantsTag: UInt32 {
+enum PrototypeConstantsTag: Byte {
     case nil_ = 0x00
     case boolean = 0x01
     case number = 0x03
@@ -65,7 +65,7 @@ struct Prototype {
     // 常量表，用于春芳Lua代码里出现的字面量，包括Nil，布尔值，整数，浮点数和字符串五种
     // 每个常量以1字节tag开头，用来表示后续存储的是哪种类型的常量值
     // 常用0x00 nil 不存储，0x01 bool 字节（0，1），0x03 number lua浮点，0x13 integer lua整数，0x04 string 短字符串，0x14 string 长字符串
-    let Constants: [PrototypeConstantsTag]
+    let Constants: [Any]
     // TODO: 第十章时补充
     let Upvalues: [Upvalue]
     // 子函数原型表
@@ -82,8 +82,15 @@ struct BinaryChunk {
     let header: Header
     let sizeUpValue: Int8
     let mainFunc: Prototype
+    
+    // TODO: 未完成
+    static func undump(data: [UInt8]) -> Prototype {
+        
+        let reader = Reader.init(data: Bytes.init(existingBytes: data))
+        reader.checkHeader() // 校验头部
+        _ = reader.readByte() // 跳过Upvalue
+        return  reader.readProto(parentSource: "")
+    }
+    
 }
-// TODO: 未完成
-//func undump(data: Bytes) -> Prototype {
-//
-//}
+
