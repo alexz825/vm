@@ -39,7 +39,10 @@ struct Reader {
             size = self.readUInt64()
         }
         let bytes = self.data.exportBytes(count: Int(size - 1))
-        return unsafeBitCast(bytes, to: String.self)
+        guard let string = String.init(bytes: bytes, encoding: .utf8) else {
+            fatalError("bytes cannot convert to string")
+        }
+        return string
     }
     
     func checkHeader() {
@@ -71,6 +74,7 @@ struct Reader {
         if self.data.export8Bits() != defaultHeader.luaNumberSize {
             fatalError("lua_integer size mismatch!")
         }
+
         if self.readLuaInteger() != defaultHeader.luacInt {
             fatalError("endianness mismatch!")
         }
