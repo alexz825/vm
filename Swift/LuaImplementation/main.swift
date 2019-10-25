@@ -9,7 +9,7 @@
 import Foundation
 
 func main() {
-    guard let handle = FileHandle.init(forReadingAtPath: "/Users/chenmu/Desktop/LuaSwift/test/luac.out") else {
+    guard let handle = FileHandle.init(forReadingAtPath: "/Users/alexzhu/Desktop/LuaImplementation/test/luac.out") else {
         fatalError("no file")
     }
     let data = handle.readDataToEndOfFile()
@@ -44,13 +44,54 @@ func printHeader(_ proto: Prototype) {
 }
 
 func printCode(_ proto: Prototype) {
+    
+    func printOperands(inst: Instruction) {
+        var string = ""
+        switch inst.opMode() {
+        case .iABC:
+            let (a, b, c) = inst.ABC()
+            string += "\(a)"
+            if inst.bMode() != .n {
+                if b > 0xff {
+                    string += " \(-1 - b & 0xff)"
+                } else {
+                    string += " \(b)"
+                }
+            }
+            if inst.cMode() != .n {
+                if c>0xff {
+                    string += " \(-1 - c & 0xff)"
+                } else {
+                    string += " \(c)"
+                }
+            }
+        case .iABx:
+            let (a, bx) = inst.ABx()
+            string += "\(a)"
+            if inst.bMode() == .k {
+                string += " \(-1-bx)"
+            } else if inst.bMode() == .u {
+                string += " \(bx)"
+            }
+        case .iAsBx:
+            let (a, sBx) = inst.AsBx()
+            string += "\(a) \(sBx)"
+        case .iAx:
+            let ax = inst.Ax()
+            string += "\(-1-ax)"
+        }
+        print(string)
+    }
+    
     for (index, code) in proto.Code.enumerated() {
         var line = "-"
         if proto.LineInfo.count > 0 {
             line = "\(proto.LineInfo[index])"
         }
         
-        print("\t \(index + 1) \t [\(line)] \t 0x\(code)")
+        let inst = Instruction(code)
+        print("\t \(index + 1) \t [\(line)] \t\(inst.opName())", separator: " ", terminator: " ")
+        printOperands(inst: inst)
     }
 }
 
@@ -58,6 +99,24 @@ func printDetail(_ proto: Prototype) {
     print("constants (\(proto.Constants.count):)")
     for (i, cons) in proto.Constants.enumerated() {
         print("\t\(i+1)\t \(String(describing: cons))")
+    }
+    
+    print("locals \(proto.LocVars.count)")
+    for (_, locvar) in proto.LocVars.enumerated() {
+        print("\t \(locvar.varName) \t \(locvar.startPC + 1) \t \(locvar.endPC+1)")
+    }
+    
+    func upvalName(prototype: Prototype, index: Int) -> String {
+        // TODO: 简化
+        if proto.UpvalueNames.count > 0 {
+            return proto.UpvalueNames[index]
+        }
+        return "-"
+    }
+    
+    print("upvalues \(proto.Upvalues.count)")
+    for (index, upvalue) in proto.Upvalues.enumerated() {
+        print("\t \(upvalName(prototype: proto, index: index)) \t \(upvalue.Instack) \t \(upvalue.Idx)")
     }
 }
 

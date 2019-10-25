@@ -26,15 +26,6 @@ struct Header {
     let luacNum: Float64 = 370.5
 }
 
-enum PrototypeConstantsTag: Byte {
-    case nil_ = 0x00
-    case boolean = 0x01
-    case number = 0x03
-    case integer = 0x13
-    case shortStr = 0x04
-    case longStr = 0x14
-}
-
 struct Upvalue {
     let Instack: Byte
     let Idx: Byte
@@ -44,6 +35,30 @@ struct LocVar {
     let varName: String
     let startPC: UInt32
     let endPC: UInt32
+}
+
+struct Constant: CustomStringConvertible {
+    
+    struct Nil {}
+    
+    enum Tag: Byte {
+        case nil_ = 0x00
+        case boolean = 0x01
+        case number = 0x03
+        case integer = 0x13
+        case shortStr = 0x04
+        case longStr = 0x14
+    }
+    
+    let type: Tag
+    let value: Any
+    
+    var description: String {
+        if type == .nil_ {
+            return  "nil"
+        }
+        return "\(value)"
+    }
 }
 
 struct Prototype {
@@ -65,7 +80,7 @@ struct Prototype {
     // 常量表，用于春芳Lua代码里出现的字面量，包括Nil，布尔值，整数，浮点数和字符串五种
     // 每个常量以1字节tag开头，用来表示后续存储的是哪种类型的常量值
     // 常用0x00 nil 不存储，0x01 bool 字节（0，1），0x03 number lua浮点，0x13 integer lua整数，0x04 string 短字符串，0x14 string 长字符串
-    let Constants: [Any?]
+    let Constants: [Constant]
     // TODO: 第十章时补充
     let Upvalues: [Upvalue]
     // 子函数原型表

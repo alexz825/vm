@@ -11,6 +11,8 @@
 		605F89BD2359FC11002167FC /* reader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F89BB2359FC11002167FC /* reader.swift */; };
 		605F89BE2359FC11002167FC /* binary_chunk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F89BC2359FC11002167FC /* binary_chunk.swift */; };
 		605F89C02359FDCD002167FC /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F89BF2359FDCD002167FC /* Bytes.swift */; };
+		60FA24252361EABD0022E5DF /* OpCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24242361EABD0022E5DF /* OpCodes.swift */; };
+		60FA24272361F9CD0022E5DF /* Instruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24262361F9CD0022E5DF /* Instruction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +33,8 @@
 		605F89BB2359FC11002167FC /* reader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = reader.swift; sourceTree = "<group>"; };
 		605F89BC2359FC11002167FC /* binary_chunk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = binary_chunk.swift; sourceTree = "<group>"; };
 		605F89BF2359FDCD002167FC /* Bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bytes.swift; sourceTree = "<group>"; };
+		60FA24242361EABD0022E5DF /* OpCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpCodes.swift; sourceTree = "<group>"; };
+		60FA24262361F9CD0022E5DF /* Instruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instruction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,8 @@
 				605F89BC2359FC11002167FC /* binary_chunk.swift */,
 				605F89BB2359FC11002167FC /* reader.swift */,
 				605F89B42359FBC9002167FC /* main.swift */,
+				60FA24242361EABD0022E5DF /* OpCodes.swift */,
+				60FA24262361F9CD0022E5DF /* Instruction.swift */,
 			);
 			path = LuaImplementation;
 			sourceTree = "<group>";
@@ -128,8 +134,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60FA24272361F9CD0022E5DF /* Instruction.swift in Sources */,
 				605F89BD2359FC11002167FC /* reader.swift in Sources */,
 				605F89C02359FDCD002167FC /* Bytes.swift in Sources */,
+				60FA24252361EABD0022E5DF /* OpCodes.swift in Sources */,
 				605F89B52359FBC9002167FC /* main.swift in Sources */,
 				605F89BE2359FC11002167FC /* binary_chunk.swift in Sources */,
 			);

@@ -105,27 +105,31 @@ struct Reader {
         return (UInt32(0)..<self.readUInt32()).map({_ in self.readUInt32()})
     }
     // 读取常量表
-    func readConstants() -> [Any?] {
-        return (UInt32(0)..<self.readUInt32()).map({ (tag) -> Any? in
+    func readConstants() -> [Constant] {
+        return (UInt32(0)..<self.readUInt32()).map({ _ -> Constant in
             return self.readConstant()
         })
     }
-    func readConstant() -> Any? {
-        let tag = PrototypeConstantsTag.init(rawValue: self.readByte()) ?? .nil_
+    func readConstant() -> Constant {
+        guard let tag = Constant.Tag.init(rawValue: self.readByte()) else {
+            fatalError("cannot read Constant Tag")
+        }
+        let value: Any
         switch tag {
         case .nil_:
-            return nil
+             value = Constant.Nil()
         case .boolean:
-            return self.readByte() != 0
+            value = self.readByte() != 0
         case .integer:
-            return self.readLuaInteger()
+            value = self.readLuaInteger()
         case .number:
-            return self.readLuaNumber()
+            value = self.readLuaNumber()
         case .shortStr:
-            return self.readString()
+            value = self.readString()
         case .longStr:
-            return self.readString()
+            value = self.readString()
         }
+        return Constant(type: tag, value: value)
     }
     
     func readUpvalues() -> [Upvalue] {
