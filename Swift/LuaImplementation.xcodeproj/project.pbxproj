@@ -13,6 +13,14 @@
 		605F89C02359FDCD002167FC /* Bytes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 605F89BF2359FDCD002167FC /* Bytes.swift */; };
 		60FA24252361EABD0022E5DF /* OpCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24242361EABD0022E5DF /* OpCodes.swift */; };
 		60FA24272361F9CD0022E5DF /* Instruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24262361F9CD0022E5DF /* Instruction.swift */; };
+		60FA2429236482DA0022E5DF /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA2428236482DA0022E5DF /* Api.swift */; };
+		60FA242B236563350022E5DF /* LuaStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA242A236563350022E5DF /* LuaStack.swift */; };
+		60FA242F2365946C0022E5DF /* LuaState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA242E2365946C0022E5DF /* LuaState.swift */; };
+		60FA2431236596940022E5DF /* LuaStateInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA2430236596940022E5DF /* LuaStateInstance.swift */; };
+		60FA24332365D0AC0022E5DF /* ApiAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24322365D0AC0022E5DF /* ApiAccess.swift */; };
+		60FA2436236741FD0022E5DF /* math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA2435236741FD0022E5DF /* math.swift */; };
+		60FA24382367C12D0022E5DF /* parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24372367C12D0022E5DF /* parser.swift */; };
+		60FA243A2368857B0022E5DF /* Arith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24392368857B0022E5DF /* Arith.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +43,14 @@
 		605F89BF2359FDCD002167FC /* Bytes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bytes.swift; sourceTree = "<group>"; };
 		60FA24242361EABD0022E5DF /* OpCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpCodes.swift; sourceTree = "<group>"; };
 		60FA24262361F9CD0022E5DF /* Instruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Instruction.swift; sourceTree = "<group>"; };
+		60FA2428236482DA0022E5DF /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
+		60FA242A236563350022E5DF /* LuaStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaStack.swift; sourceTree = "<group>"; };
+		60FA242E2365946C0022E5DF /* LuaState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaState.swift; sourceTree = "<group>"; };
+		60FA2430236596940022E5DF /* LuaStateInstance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaStateInstance.swift; sourceTree = "<group>"; };
+		60FA24322365D0AC0022E5DF /* ApiAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiAccess.swift; sourceTree = "<group>"; };
+		60FA2435236741FD0022E5DF /* math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = math.swift; sourceTree = "<group>"; };
+		60FA24372367C12D0022E5DF /* parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parser.swift; sourceTree = "<group>"; };
+		60FA24392368857B0022E5DF /* Arith.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arith.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +83,9 @@
 		605F89B32359FBC9002167FC /* LuaImplementation */ = {
 			isa = PBXGroup;
 			children = (
+				60FA2434236741F30022E5DF /* nubmer */,
+				60FA242D236594630022E5DF /* Api */,
+				60FA242C236563410022E5DF /* State */,
 				605F89BF2359FDCD002167FC /* Bytes.swift */,
 				605F89BC2359FC11002167FC /* binary_chunk.swift */,
 				605F89BB2359FC11002167FC /* reader.swift */,
@@ -75,6 +94,35 @@
 				60FA24262361F9CD0022E5DF /* Instruction.swift */,
 			);
 			path = LuaImplementation;
+			sourceTree = "<group>";
+		};
+		60FA242C236563410022E5DF /* State */ = {
+			isa = PBXGroup;
+			children = (
+				60FA242A236563350022E5DF /* LuaStack.swift */,
+				60FA2430236596940022E5DF /* LuaStateInstance.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		60FA242D236594630022E5DF /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				60FA2428236482DA0022E5DF /* Api.swift */,
+				60FA242E2365946C0022E5DF /* LuaState.swift */,
+				60FA24322365D0AC0022E5DF /* ApiAccess.swift */,
+			);
+			path = Api;
+			sourceTree = "<group>";
+		};
+		60FA2434236741F30022E5DF /* nubmer */ = {
+			isa = PBXGroup;
+			children = (
+				60FA2435236741FD0022E5DF /* math.swift */,
+				60FA24372367C12D0022E5DF /* parser.swift */,
+				60FA24392368857B0022E5DF /* Arith.swift */,
+			);
+			path = nubmer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,11 +183,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				60FA24272361F9CD0022E5DF /* Instruction.swift in Sources */,
+				60FA2431236596940022E5DF /* LuaStateInstance.swift in Sources */,
 				605F89BD2359FC11002167FC /* reader.swift in Sources */,
+				60FA24332365D0AC0022E5DF /* ApiAccess.swift in Sources */,
+				60FA24382367C12D0022E5DF /* parser.swift in Sources */,
 				605F89C02359FDCD002167FC /* Bytes.swift in Sources */,
 				60FA24252361EABD0022E5DF /* OpCodes.swift in Sources */,
 				605F89B52359FBC9002167FC /* main.swift in Sources */,
+				60FA2436236741FD0022E5DF /* math.swift in Sources */,
+				60FA242F2365946C0022E5DF /* LuaState.swift in Sources */,
+				60FA2429236482DA0022E5DF /* Api.swift in Sources */,
 				605F89BE2359FC11002167FC /* binary_chunk.swift in Sources */,
+				60FA243A2368857B0022E5DF /* Arith.swift in Sources */,
+				60FA242B236563350022E5DF /* LuaStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,15 +9,15 @@
 import Foundation
 
 func main() {
-    guard let handle = FileHandle.init(forReadingAtPath: "/Users/alexzhu/Desktop/LuaImplementation/test/luac.out") else {
-        fatalError("no file")
-    }
-    let data = handle.readDataToEndOfFile()
-    
-    let proto = BinaryChunk.undump(data: [UInt8](data))
-//    print(proto)
-    list(proto)
-    
+//    guard let handle = FileHandle.init(forReadingAtPath: "/Users/alexzhu/Desktop/LuaImplementation/test/luac.out") else {
+//        fatalError("no file")
+//    }
+//    let data = handle.readDataToEndOfFile()
+//
+//    let proto = BinaryChunk.undump(data: [UInt8](data))
+////    print(proto)
+//    list(proto)
+    testStack()
 }
 
 func list(_ proto: Prototype) {
@@ -118,6 +118,48 @@ func printDetail(_ proto: Prototype) {
     for (index, upvalue) in proto.Upvalues.enumerated() {
         print("\t \(upvalName(prototype: proto, index: index)) \t \(upvalue.Instack) \t \(upvalue.Idx)")
     }
+}
+
+func testStack() {
+    let state = LuaStateInstance.init()
+    state.pushBoolean(b: true)
+    printStack(ls: state)
+    state.pushInteger(n: 10)
+    printStack(ls: state)
+    state.pushNil()
+    printStack(ls: state)
+    state.pushString(s: "hello")
+    printStack(ls: state)
+    state.push(value: -4)
+    printStack(ls: state)
+    state.replace(idx: 3)
+    printStack(ls: state)
+    state.setTop(idx: 6)
+    printStack(ls: state)
+    state.remove(idx: -3)
+    printStack(ls: state)
+    state.setTop(idx: -5)
+    printStack(ls: state)
+}
+
+func printStack(ls: LuaStateInstance) {
+    let top = ls.getTop()
+    
+    for i in 1...top {
+        let valueType = ls.type(idx: i)
+        
+        switch valueType {
+        case .boolean:
+            print("[\(ls.toBoolean(idx: i))]", separator: "", terminator: " ")
+        case .nubmer:
+            print("[\(ls.toNumber(idx: i))]", separator: "", terminator: " ")
+        case .string:
+            print("[\(ls.toString(idx: i))]", separator: "", terminator: " ")
+        default:
+            print("[\(ls.typeName(tp: valueType))]", separator: "", terminator: " ")
+        }
+    }
+    print()
 }
 
 main()
