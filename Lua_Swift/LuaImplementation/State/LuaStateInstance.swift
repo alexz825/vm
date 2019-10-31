@@ -141,7 +141,7 @@ class LuaStateInstance: LuaState {
         return type == .none || type == .nil_
     }
     
-    func convertToBoolean(val: LuaValue) -> Bool {
+    func convertToBoolean(val: LuaValueType) -> Bool {
         switch val.type {
         case .nil_:
             return false
@@ -227,12 +227,12 @@ class LuaStateInstance: LuaState {
         if let i = val.value as? Int64 {
             let s = "\(i)"
             self.stack.set(idx: idx,
-                           val: LuaValue(type: .string, value: s))
+                           val: LuaValueType(type: .string, value: s))
         }
         if let i = val.value as? Float64 {
             let s = "\(i)"
             self.stack.set(idx: idx,
-                           val: LuaValue(type: .string, value: s))
+                           val: LuaValueType(type: .string, value: s))
         }
         return ("", false)
     }
@@ -242,19 +242,19 @@ class LuaStateInstance: LuaState {
     }
     
     func pushBoolean(b: Bool) {
-        self.stack.push(value: LuaValue(type: .boolean, value: b))
+        self.stack.push(value: LuaValueType(type: .boolean, value: b))
     }
     
     func pushInteger(n: Int64) {
-        self.stack.push(value: LuaValue(type: .nubmer, value: n))
+        self.stack.push(value: LuaValueType(type: .nubmer, value: n))
     }
     
     func pushNumber(f: Float64) {
-        self.stack.push(value: LuaValue(type: .nubmer, value: f))
+        self.stack.push(value: LuaValueType(type: .nubmer, value: f))
     }
     
     func pushString(s: String) {
-        self.stack.push(value: LuaValue(type: .string, value: s))
+        self.stack.push(value: LuaValueType(type: .string, value: s))
     }
     
 }
@@ -262,7 +262,7 @@ class LuaStateInstance: LuaState {
 // MARK: - Arith Operation
 extension LuaStateInstance {
     func arith(op: ArithOperator) {
-        let a, b: LuaValue
+        let a, b: LuaValueType
         b = self.stack.pop()
         if op != .unm && op != .bNot {
             a = self.stack.pop()

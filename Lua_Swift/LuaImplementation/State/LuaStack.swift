@@ -6,38 +6,102 @@
 //  Copyright © 2019 AlexZHU. All rights reserved.
 //
 
-struct LuaValue {
-    var type: LuaType
-    var value: Any
-    
-    func nubmer() -> Float64? {
-        switch type {
-        case .nubmer:
-            return value as? Float64
-        case .string:
-            return Float64(value as? String ?? "")
-        default:
-            return nil
-        }
+protocol LuaValueType {
+    var type: LuaType {get}
+}
+extension String: LuaValueType {
+    var type: LuaType {
+        return .string
     }
-    
-    func integer() -> Int64? {
-        switch type {
-        case .nubmer:
-            return value as? Int64
-        case .string:
-            return Int64(value as? String ?? "")
-        default:
-            return nil
-        }
+}
+extension Int64: LuaValueType {
+    var type: LuaType {
+        return .nubmer
+    }
+}
+extension Float64: LuaValueType {
+    var type: LuaType {
+        return .nubmer
+    }
+}
+extension Bool: LuaValueType {
+    var type: LuaType {
+        return .boolean
     }
 }
 
-let luaNil = LuaValue.init(type: .nil_, value: "")
 
+
+//struct LuaValueType {
+//    var type: LuaType
+//    var value: LuaValueType
+//
+//    func nubmer() -> Float64? {
+//        switch type {
+//        case .nubmer:
+//            return value as? Float64
+//        case .string:
+//            return Float64(value as? String ?? "")
+//        default:
+//            return nil
+//        }
+//    }
+//
+//    func integer() -> Int64? {
+//        switch type {
+//        case .nubmer:
+//            return value as? Int64
+//        case .string:
+//            return Int64(value as? String ?? "")
+//        default:
+//            return nil
+//        }
+//    }
+//}
+//
+//extension LuaValueType {
+//    static func -(lhs: LuaValueType, rhs: LuaValueType) -> LuaValueType {
+//        if lhs.type != rhs.type {
+//            fatalError("value type is differrent")
+//        }
+//        if let v1 = lhs.nubmer(), let v2 = rhs.nubmer() {
+//            return LuaValueType.init(type: .nubmer, value: v1 - v2)
+//        }
+//        if let v1 = lhs.integer(), let v2 = rhs.integer() {
+//            return LuaValueType.init(type: .nubmer, value: v1 - v2)
+//        }
+//        fatalError("not a nubmer value")
+//    }
+//
+//    static func +(lhs: LuaValueType, rhs: LuaValueType) -> LuaValueType {
+//        if lhs.type != rhs.type {
+//            fatalError("value type is differrent")
+//        }
+//        if let v1 = lhs.nubmer(), let v2 = rhs.nubmer() {
+//            return LuaValueType.init(type: .nubmer, value: v1 + v2)
+//        }
+//        if let v1 = lhs.integer(), let v2 = rhs.integer() {
+//            return LuaValueType.init(type: .nubmer, value: v1 + v2)
+//        }
+//        fatalError("not a nubmer value")
+//    }
+//
+//}
+
+struct Nil: CustomStringConvertible, LuaValueType {
+    var type: LuaType {
+        return .nil_
+    }
+    
+    var description: String {
+        return "nil"
+    }
+}
+
+let luaNil = Nil()
 
 struct LuaStack {
-    private(set) var slots: [LuaValue] = []
+    private(set) var slots: [LuaValueType] = []
     var top: Int {
         return self.slots.count
     }
@@ -54,14 +118,14 @@ struct LuaStack {
         }
     }
     
-    mutating func push(value: LuaValue) {
+    mutating func push(value: LuaValueType) {
         if self.top == self.size {
             fatalError("stack overflow")
         }
         self.slots.append(value)
     }
     
-    mutating func pop() -> LuaValue {
+    mutating func pop() -> LuaValueType {
         if self.top < 1 {
             fatalError("stack underflow")
         }
@@ -83,7 +147,7 @@ struct LuaStack {
         return absIdx > 0 && absIdx <= self.top
     }
     // 根据索引从栈里取值
-    func get(idx: Int) -> LuaValue? {
+    func get(idx: Int) -> LuaValueType? {
         let absIdx = self.absIndex(idx: idx)
         if absIdx > 0 && absIdx <= self.top {
             return self.slots[absIdx - 1]
@@ -91,7 +155,7 @@ struct LuaStack {
         return nil
     }
     // 根据索引向栈里写入值
-    mutating func set(idx: Int, val: LuaValue) {
+    mutating func set(idx: Int, val: LuaValueType) {
         let absIdx = self.absIndex(idx: idx)
         if absIdx > 0 && absIdx <= self.top {
             self.slots[absIdx - 1] = val
