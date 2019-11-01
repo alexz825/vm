@@ -6,100 +6,6 @@
 //  Copyright © 2019 AlexZHU. All rights reserved.
 //
 
-protocol LuaValueType {
-    var type: LuaType {get}
-}
-extension String: LuaValueType {
-    var type: LuaType {
-        return .string
-    }
-}
-extension Int64: LuaValueType {
-    var type: LuaType {
-        return .nubmer
-    }
-}
-extension Float64: LuaValueType {
-    var type: LuaType {
-        return .nubmer
-    }
-}
-extension Bool: LuaValueType {
-    var type: LuaType {
-        return .boolean
-    }
-}
-
-
-
-//struct LuaValueType {
-//    var type: LuaType
-//    var value: LuaValueType
-//
-//    func nubmer() -> Float64? {
-//        switch type {
-//        case .nubmer:
-//            return value as? Float64
-//        case .string:
-//            return Float64(value as? String ?? "")
-//        default:
-//            return nil
-//        }
-//    }
-//
-//    func integer() -> Int64? {
-//        switch type {
-//        case .nubmer:
-//            return value as? Int64
-//        case .string:
-//            return Int64(value as? String ?? "")
-//        default:
-//            return nil
-//        }
-//    }
-//}
-//
-//extension LuaValueType {
-//    static func -(lhs: LuaValueType, rhs: LuaValueType) -> LuaValueType {
-//        if lhs.type != rhs.type {
-//            fatalError("value type is differrent")
-//        }
-//        if let v1 = lhs.nubmer(), let v2 = rhs.nubmer() {
-//            return LuaValueType.init(type: .nubmer, value: v1 - v2)
-//        }
-//        if let v1 = lhs.integer(), let v2 = rhs.integer() {
-//            return LuaValueType.init(type: .nubmer, value: v1 - v2)
-//        }
-//        fatalError("not a nubmer value")
-//    }
-//
-//    static func +(lhs: LuaValueType, rhs: LuaValueType) -> LuaValueType {
-//        if lhs.type != rhs.type {
-//            fatalError("value type is differrent")
-//        }
-//        if let v1 = lhs.nubmer(), let v2 = rhs.nubmer() {
-//            return LuaValueType.init(type: .nubmer, value: v1 + v2)
-//        }
-//        if let v1 = lhs.integer(), let v2 = rhs.integer() {
-//            return LuaValueType.init(type: .nubmer, value: v1 + v2)
-//        }
-//        fatalError("not a nubmer value")
-//    }
-//
-//}
-
-struct Nil: CustomStringConvertible, LuaValueType {
-    var type: LuaType {
-        return .nil_
-    }
-    
-    var description: String {
-        return "nil"
-    }
-}
-
-let luaNil = Nil()
-
 struct LuaStack {
     private(set) var slots: [LuaValueType] = []
     var top: Int {
@@ -125,6 +31,7 @@ struct LuaStack {
         self.slots.append(value)
     }
     
+    @discardableResult
     mutating func pop() -> LuaValueType {
         if self.top < 1 {
             fatalError("stack underflow")

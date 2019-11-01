@@ -17,7 +17,28 @@ func main() {
 //    let proto = BinaryChunk.undump(data: [UInt8](data))
 ////    print(proto)
 //    list(proto)
-    testStack()
+    testArith()
+}
+
+func testArith() {
+    let ls = LuaStateInstance()
+    ls.pushInteger(n: 1)
+    ls.pushString(s: "2.0")
+    ls.pushString(s: "3.0")
+    ls.pushNumber(f: 4.0)
+    printStack(ls: ls)
+    
+    ls.arith(op: .add)
+    printStack(ls: ls)
+    ls.arith(op: .bNot)
+    printStack(ls: ls)
+    
+    ls.len(idx: 2)
+    printStack(ls: ls)
+    ls.concat(n: 3)
+    printStack(ls: ls)
+    ls.pushBoolean(b: ls.compare(idx1: 1, idx2: 2, op: .eq))
+    printStack(ls: ls)
 }
 
 func list(_ proto: Prototype) {

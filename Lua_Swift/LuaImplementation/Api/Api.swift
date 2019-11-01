@@ -10,9 +10,9 @@ enum LuaType: Int {
     case none = -1 // Lua栈是按照索引取值，如果是一个无效索引，则就是none
     case nil_
     case boolean
-    case lightUserData
     case nubmer
     case string
+    case lightUserData
     case table
     case function
     case userData

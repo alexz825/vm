@@ -8,29 +8,6 @@
 
 import Cocoa
 
-enum ArithOperator {
-    case add // +
-    case sub // -
-    case mul // *
-    case mod // %
-    case pow // ^
-    case div // /
-    case iDiv // //
-    case bAnd // &
-    case bOr // |
-    case bXor // ~
-    case shl // <<
-    case shr // >>
-    case unm // - (unary minus)
-    case bNot // ~
-}
-
-enum CompareOperator {
-    case eq // ==
-    case lt // <
-    case le // <=
-}
-
 class LuaStateInstance: LuaState {
     var stack: LuaStack
     
@@ -146,7 +123,7 @@ class LuaStateInstance: LuaState {
         case .nil_:
             return false
         case .boolean:
-            return val.value as? Bool ?? false
+            return val as? Bool ?? false
         default:
             return true
         }
@@ -158,7 +135,7 @@ class LuaStateInstance: LuaState {
     
     func isInteger(idx: Int) -> Bool {
         let val = self.stack.get(idx: idx)
-        return val?.value is Int
+        return val is Int
     }
     
     func isNumber(idx: Int) -> Bool {
@@ -188,7 +165,7 @@ class LuaStateInstance: LuaState {
         guard let val = self.stack.get(idx: idx) else {
             fatalError("idx of stack no value")
         }
-        if let v = val.value as? Int64 {
+        if let v = val as? Int64 {
             return (v, true)
         }
         return (0, false)
@@ -203,10 +180,10 @@ class LuaStateInstance: LuaState {
         guard let val = self.stack.get(idx: idx) else {
             fatalError("idx of stack no value")
         }
-        if let f = val.value as? Float64 {
+        if let f = val as? Float64 {
             return (f, true)
         }
-        if let i = val.value as? Int64 {
+        if let i = val as? Int64 {
             return (Float64(i), true)
         }
         return (0, false)
@@ -221,18 +198,20 @@ class LuaStateInstance: LuaState {
         guard let val = self.stack.get(idx: idx) else {
             fatalError("idx of stack no value")
         }
-        if let s = val.value as? String {
+        if let s = val as? String {
             return (s, true)
         }
-        if let i = val.value as? Int64 {
+        if let i = val as? Int64 {
             let s = "\(i)"
             self.stack.set(idx: idx,
-                           val: LuaValueType(type: .string, value: s))
+                           val: s)
+            return (s, true)
         }
-        if let i = val.value as? Float64 {
+        if let i = val as? Float64 {
             let s = "\(i)"
             self.stack.set(idx: idx,
-                           val: LuaValueType(type: .string, value: s))
+                           val: s)
+            return (s, true)
         }
         return ("", false)
     }
@@ -242,19 +221,19 @@ class LuaStateInstance: LuaState {
     }
     
     func pushBoolean(b: Bool) {
-        self.stack.push(value: LuaValueType(type: .boolean, value: b))
+        self.stack.push(value: b)
     }
     
     func pushInteger(n: Int64) {
-        self.stack.push(value: LuaValueType(type: .nubmer, value: n))
+        self.stack.push(value: n)
     }
     
     func pushNumber(f: Float64) {
-        self.stack.push(value: LuaValueType(type: .nubmer, value: f))
+        self.stack.push(value: f)
     }
     
     func pushString(s: String) {
-        self.stack.push(value: LuaValueType(type: .string, value: s))
+        self.stack.push(value: s)
     }
     
 }
@@ -262,22 +241,53 @@ class LuaStateInstance: LuaState {
 // MARK: - Arith Operation
 extension LuaStateInstance {
     func arith(op: ArithOperator) {
-        let a, b: LuaValueType
-        b = self.stack.pop()
-        if op != .unm && op != .bNot {
-            a = self.stack.pop()
-        } else {
-            a = b
+        do {
+            let a, b: LuaValueType
+            b = self.stack.pop()
+            let result: LuaValueType
+            if op != .unm && op != .bNot {
+                a = self.stack.pop()
+                result = try op.action(lhs: a, rhs: b)
+            } else {
+                result = try op.action(lhs: b)
+            }
+            self.stack.push(value: result)
+        } catch let error {
+            fatalError(error.localizedDescription)
         }
+        
         
     }
     func compare(idx1: Int, idx2: Int, op: CompareOperator) -> Bool {
-        return true
+        guard let a = self.stack.get(idx: idx1), let b = self.stack.get(idx: idx2) else {
+            fatalError("error get value from stack")
+        }
+        return op.action(v1: a, v2: b)
     }
     func len(idx: Int) {
-        
+        guard let value = self.stack.get(idx: idx) else { fatalError("error get value from stack") }
+        if let v = value as? String {
+            self.stack.push(value: Int64(v.count))
+        } else {
+            fatalError("error get length")
+        }
     }
     func concat(n: Int) {
-        
+        if n == 0 {
+            self.stack.push(value: "")
+        } else if n >= 2 {
+            for _ in 1..<n {
+                if self.isString(idx: -1) && self.isString(idx: -2) {
+                    let s2 = self.toString(idx: -1)
+                    let s1 = self.toString(idx: -2)
+                    self.stack.pop()
+                    self.stack.pop()
+                    self.stack.push(value: s1 + s2)
+                } else {
+                    fatalError("concatenation error!")
+                }
+            }
+        }
+        // TODO: n = 1
     }
 }

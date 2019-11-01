@@ -21,6 +21,7 @@
 		60FA2436236741FD0022E5DF /* math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA2435236741FD0022E5DF /* math.swift */; };
 		60FA24382367C12D0022E5DF /* parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24372367C12D0022E5DF /* parser.swift */; };
 		60FA243A2368857B0022E5DF /* Arith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24392368857B0022E5DF /* Arith.swift */; };
+		9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1B8236BD84E00960189 /* LuaValue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +52,7 @@
 		60FA2435236741FD0022E5DF /* math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = math.swift; sourceTree = "<group>"; };
 		60FA24372367C12D0022E5DF /* parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parser.swift; sourceTree = "<group>"; };
 		60FA24392368857B0022E5DF /* Arith.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arith.swift; sourceTree = "<group>"; };
+		9C49A1B8236BD84E00960189 /* LuaValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaValue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 			children = (
 				60FA242A236563350022E5DF /* LuaStack.swift */,
 				60FA2430236596940022E5DF /* LuaStateInstance.swift */,
+				9C49A1B8236BD84E00960189 /* LuaValue.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -191,6 +194,7 @@
 				60FA24252361EABD0022E5DF /* OpCodes.swift in Sources */,
 				605F89B52359FBC9002167FC /* main.swift in Sources */,
 				60FA2436236741FD0022E5DF /* math.swift in Sources */,
+				9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */,
 				60FA242F2365946C0022E5DF /* LuaState.swift in Sources */,
 				60FA2429236482DA0022E5DF /* Api.swift in Sources */,
 				605F89BE2359FC11002167FC /* binary_chunk.swift in Sources */,

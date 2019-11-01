@@ -12,8 +12,9 @@ func parseInteger(str: String) -> Int64? {
     return Int64(str)
 }
 
-func parseFloat(str: String) -> Float64 {
-    return Float64(64)
+func parseFloat(str: String) -> Float64? {
+    return Float64(str)
 }
+
 
 
