@@ -22,6 +22,7 @@
 		60FA24382367C12D0022E5DF /* parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24372367C12D0022E5DF /* parser.swift */; };
 		60FA243A2368857B0022E5DF /* Arith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24392368857B0022E5DF /* Arith.swift */; };
 		9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1B8236BD84E00960189 /* LuaValue.swift */; };
+		9C49A1BB236C459F00960189 /* LuaVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1BA236C459F00960189 /* LuaVM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +54,7 @@
 		60FA24372367C12D0022E5DF /* parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parser.swift; sourceTree = "<group>"; };
 		60FA24392368857B0022E5DF /* Arith.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arith.swift; sourceTree = "<group>"; };
 		9C49A1B8236BD84E00960189 /* LuaValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaValue.swift; sourceTree = "<group>"; };
+		9C49A1BA236C459F00960189 /* LuaVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaVM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 				60FA2428236482DA0022E5DF /* Api.swift */,
 				60FA242E2365946C0022E5DF /* LuaState.swift */,
 				60FA24322365D0AC0022E5DF /* ApiAccess.swift */,
+				9C49A1BA236C459F00960189 /* LuaVM.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 				60FA2436236741FD0022E5DF /* math.swift in Sources */,
 				9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */,
 				60FA242F2365946C0022E5DF /* LuaState.swift in Sources */,
+				9C49A1BB236C459F00960189 /* LuaVM.swift in Sources */,
 				60FA2429236482DA0022E5DF /* Api.swift in Sources */,
 				605F89BE2359FC11002167FC /* binary_chunk.swift in Sources */,
 				60FA243A2368857B0022E5DF /* Arith.swift in Sources */,

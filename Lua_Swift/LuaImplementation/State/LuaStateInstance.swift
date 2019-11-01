@@ -10,10 +10,43 @@ import Cocoa
 
 class LuaStateInstance: LuaState {
     var stack: LuaStack
+    private(set) var pc: Int
+    var proto: Prototype
     
-    init(size: Int = 20) {
+    init(size: Int = 20, proto: Prototype) {
         stack = LuaStack.init(size: size)
+        pc = 0
+        self.proto = proto
     }
+    
+    // 修改PC （用于实现跳转指令）
+    func addPC(n: Int) {
+        self.pc += n
+    }
+    
+    func fetch() -> UInt32 {
+        let i = self.proto.Code[self.pc]
+        self.pc += 1
+        return i
+    }
+    
+    func getConst(idx: Int) {
+        let c = self.proto.Constants[idx]
+        if let value = c.value as? LuaValueType {
+            self.stack.push(value: value)
+        } else {
+            fatalError("get constant error: \(c.value) is not a Const")
+        }
+    }
+    
+    func getRK(rk: Int) {
+        if rk < 0xff {
+            self.getConst(idx: rk & 0xff)
+        } else {
+            self.push(value: rk + 1)
+        }
+    }
+    
     func getTop() -> Int {
         return self.stack.top
     }

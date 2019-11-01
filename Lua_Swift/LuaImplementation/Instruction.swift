@@ -58,4 +58,54 @@ extension Instruction {
     func bMode() -> OpArgMode {
         return opCodes[self.opCode()].argCMode
     }
+    
+    func move(vm: LuaVM) {
+        var (a, b, _) = self.ABC()
+        a += 1
+        b += 1
+        vm.state.copy(from: b, to: a)
+    }
+    
+    func jmp(vm: LuaVM) {
+        let (a, sBx) = self.AsBx()
+        vm.addPC(n: sBx)
+        if a != 0 {
+            fatalError("toto")
+        }
+    }
+    
+    func loadNil(vm: LuaVM) {
+        var (a, b, _) = self.ABC()
+        a += 1
+        vm.state.pushNil()
+        for i in a..<(a+b) {
+            vm.state.copy(from: -1, to: i)
+        }
+        vm.state.pop(n: 1)
+    }
+    
+    func loadBool(vm: LuaVM) {
+        var (a, b, c) = self.ABC()
+        a += 1
+        vm.state.pushBoolean(b: b != 0)
+        vm.state.replace(idx: a)
+        if c != 0 {
+            vm.addPC(n: 1)
+        }
+    }
+    
+    func loadK(vm: LuaVM) {
+        var (a, bx) = self.ABx()
+        a += 1
+        vm.getConst(idx: bx)
+        vm.state.replace(idx: a)
+    }
+    
+    func loadKx(vm: LuaVM) {
+        var (a, _) = self.ABx()
+        a += 1
+        let ax  = Instruction(vm.state.fetch()).Ax()
+        vm.state.getConst(idx: ax)
+        vm.state.replace(idx: a)
+    }
 }
