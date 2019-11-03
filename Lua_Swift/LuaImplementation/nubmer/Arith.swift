@@ -8,6 +8,10 @@
 
 import Cocoa
 
+private func customPow(lhs: Double, rhs: Double) -> Double {
+    return pow(lhs, rhs)
+}
+
 protocol Arithable {}
 
 extension Arithable {
@@ -23,6 +27,9 @@ extension Arithable {
     // 转成Float64
     func float() throws -> Float64 {
         if let x = self as? Int64 {
+            return Float64(x)
+        }
+        if let x = self as? UInt64 {
             return Float64(x)
         }
         if let x = self as? Float64 {
@@ -75,7 +82,7 @@ enum ArithOperator {
         case .div:
             return try self.floatArith(lhs: lhs, rhs: rhs, operatorFunc: /)
         case .iDiv:
-            return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: %)
+            return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: /)
         case .bAnd:
             return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: &)
         case .bOr:
@@ -87,12 +94,15 @@ enum ArithOperator {
         case .shr:
             return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: >>)
         case .unm:
-            return try self.binaryArith(v: lhs, operatorFun: -)
+            return try self.binaryArith(v: lhs, operatorFunc: -)
         case .bNot:
-            return try self.binaryArith(v: lhs, operatorFun: ~)
-        default:
-            return 1
+            return try self.binaryArith(v: lhs, operatorFunc: ~)
+        case .mod:
+            return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: %)
+        case .pow:
+            return try self.floatArith(lhs: lhs, rhs: rhs, operatorFunc: customPow)
         }
+        
     }
     
     private func floatArith(lhs: LuaValueType, rhs: LuaValueType, operatorFunc: (_ lhs: Float64, _ rhs: Float64) -> Float64) throws -> LuaValueType {
@@ -109,7 +119,7 @@ enum ArithOperator {
     }
     
     private func intArith(lhs: LuaValueType, rhs: LuaValueType, operatorFunc: (_ lhs: Int64, _ rhs: Int64) -> Int64) throws -> LuaValueType {
-        guard let v1 = rhs as? Arithable else {
+        guard let v1 = lhs as? Arithable else {
             throw LuaError.arithError(msg: "\(rhs) is not arithable")
         }
         guard let v2 = rhs as? Arithable else {
@@ -118,8 +128,8 @@ enum ArithOperator {
         return operatorFunc(try v1.int(), try v2.int())
     }
     
-    private func binaryArith(lhs: LuaValueType, rhs: LuaValueType, operatorFun: (_ lhs: Int64, _ rhs: Int64) -> Int64) throws -> LuaValueType {
-        return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: operatorFun)
+    private func binaryArith(lhs: LuaValueType, rhs: LuaValueType, operatorFunc: (_ lhs: Int64, _ rhs: Int64) -> Int64) throws -> LuaValueType {
+        return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: operatorFunc)
 //        guard let v1 = rhs as? Arithable else {
 //            throw LuaError.arithError(msg: "\(rhs) is not arithable")
 //        }
@@ -129,11 +139,11 @@ enum ArithOperator {
 //        return operatorFun(try v1.int(), try v2.int())
     }
     
-    private func binaryArith(v: LuaValueType, operatorFun: (_ lhs: Int64) -> Int64) throws -> LuaValueType {
+    private func binaryArith(v: LuaValueType, operatorFunc: (_ lhs: Int64) -> Int64) throws -> LuaValueType {
         guard let value = v as? Arithable else {
             throw LuaError.arithError(msg: "\(v) is not arithable")
         }
-        return operatorFun(try value.int())
+        return operatorFunc(try value.int())
     }
 }
 

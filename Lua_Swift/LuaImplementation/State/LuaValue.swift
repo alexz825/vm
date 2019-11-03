@@ -31,6 +31,12 @@ extension String: LuaValueType, Arithable {
     }
 }
 
+extension UInt64: LuaValueType, Arithable {
+    var type: LuaType {
+        return .nubmer
+    }
+}
+
 extension Int64: LuaValueType, Arithable {
     var type: LuaType {
         return .nubmer

@@ -9,36 +9,53 @@
 import Foundation
 
 func main() {
-//    guard let handle = FileHandle.init(forReadingAtPath: "/Users/alexzhu/Desktop/LuaImplementation/test/luac.out") else {
-//        fatalError("no file")
-//    }
-//    let data = handle.readDataToEndOfFile()
-//
-//    let proto = BinaryChunk.undump(data: [UInt8](data))
-////    print(proto)
-//    list(proto)
-    testArith()
+    guard let handle = FileHandle.init(forReadingAtPath: "/Users/alexzhu/Desktop/LuaImplementation/test/luac.out") else {
+        fatalError("no file")
+    }
+    let data = handle.readDataToEndOfFile()
+
+    let proto = BinaryChunk.undump(data: [UInt8](data))
+//    printDetail(proto)
+    luaMain(proto: proto)
+
+}
+
+func luaMain(proto: Prototype) {
+    let nRegs = Int(proto.MaxStackSize)
+    let luaState = LuaStateInstance.init(size: nRegs + 8, proto: proto)
+    luaState.setTop(idx: nRegs)
+    while true {
+        let pc = luaState.pc
+        let inst = Instruction(luaState.fetch())
+        if inst.opCode.opCode != .return_ {
+            inst.excute(vm: luaState)
+            print("[\(pc + 1)] \(inst.opName())", terminator: "  ")
+            printStack(ls: luaState)
+        } else {
+            break
+        }
+    }
 }
 
 func testArith() {
-    let ls = LuaStateInstance()
-    ls.pushInteger(n: 1)
-    ls.pushString(s: "2.0")
-    ls.pushString(s: "3.0")
-    ls.pushNumber(f: 4.0)
-    printStack(ls: ls)
-    
-    ls.arith(op: .add)
-    printStack(ls: ls)
-    ls.arith(op: .bNot)
-    printStack(ls: ls)
-    
-    ls.len(idx: 2)
-    printStack(ls: ls)
-    ls.concat(n: 3)
-    printStack(ls: ls)
-    ls.pushBoolean(b: ls.compare(idx1: 1, idx2: 2, op: .eq))
-    printStack(ls: ls)
+//    let ls = LuaStateInstance()
+//    ls.pushInteger(n: 1)
+//    ls.pushString(s: "2.0")
+//    ls.pushString(s: "3.0")
+//    ls.pushNumber(f: 4.0)
+//    printStack(ls: ls)
+//
+//    ls.arith(op: .add)
+//    printStack(ls: ls)
+//    ls.arith(op: .bNot)
+//    printStack(ls: ls)
+//
+//    ls.len(idx: 2)
+//    printStack(ls: ls)
+//    ls.concat(n: 3)
+//    printStack(ls: ls)
+//    ls.pushBoolean(b: ls.compare(idx1: 1, idx2: 2, op: .eq))
+//    printStack(ls: ls)
 }
 
 func list(_ proto: Prototype) {
@@ -142,25 +159,25 @@ func printDetail(_ proto: Prototype) {
 }
 
 func testStack() {
-    let state = LuaStateInstance.init()
-    state.pushBoolean(b: true)
-    printStack(ls: state)
-    state.pushInteger(n: 10)
-    printStack(ls: state)
-    state.pushNil()
-    printStack(ls: state)
-    state.pushString(s: "hello")
-    printStack(ls: state)
-    state.push(value: -4)
-    printStack(ls: state)
-    state.replace(idx: 3)
-    printStack(ls: state)
-    state.setTop(idx: 6)
-    printStack(ls: state)
-    state.remove(idx: -3)
-    printStack(ls: state)
-    state.setTop(idx: -5)
-    printStack(ls: state)
+//    let state = LuaStateInstance.init()
+//    state.pushBoolean(b: true)
+//    printStack(ls: state)
+//    state.pushInteger(n: 10)
+//    printStack(ls: state)
+//    state.pushNil()
+//    printStack(ls: state)
+//    state.pushString(s: "hello")
+//    printStack(ls: state)
+//    state.push(value: -4)
+//    printStack(ls: state)
+//    state.replace(idx: 3)
+//    printStack(ls: state)
+//    state.setTop(idx: 6)
+//    printStack(ls: state)
+//    state.remove(idx: -3)
+//    printStack(ls: state)
+//    state.setTop(idx: -5)
+//    printStack(ls: state)
 }
 
 func printStack(ls: LuaStateInstance) {

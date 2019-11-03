@@ -40,7 +40,7 @@ class LuaStateInstance: LuaState {
     }
     
     func getRK(rk: Int) {
-        if rk < 0xff {
+        if rk > 0xff {
             self.getConst(idx: rk & 0xff)
         } else {
             self.push(value: rk + 1)
@@ -55,6 +55,7 @@ class LuaStateInstance: LuaState {
         return self.stack.absIndex(idx: idx)
     }
     
+    @discardableResult
     func checkStack(n: Int) -> Bool {
         self.stack.check(n: n)
         return true
@@ -72,9 +73,10 @@ class LuaStateInstance: LuaState {
     }
     
     func push(value idx: Int) {
-        guard let value = self.stack.get(idx: idx) else {
-            fatalError("value cannot be nil")
-        }
+//        guard let value = self.stack.get(idx: idx) else {
+//            fatalError("value cannot be nil")
+//        }
+        let value = self.stack.get(idx: idx) ?? luaNil
         self.stack.push(value: value)
     }
     
@@ -217,6 +219,9 @@ class LuaStateInstance: LuaState {
             return (f, true)
         }
         if let i = val as? Int64 {
+            return (Float64(i), true)
+        }
+        if let i = val as? UInt64 {
             return (Float64(i), true)
         }
         return (0, false)

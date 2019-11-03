@@ -13,34 +13,54 @@ enum OpMode: Int {
     case iAx
 }
 
-enum OpCodeName: Int {
-    case move = 0
-    case loadK, loadKX, loadBool, loadNil
-    case getUpVal, getTabUp, getTable
-    case setTabUp, setUpVal, setTable
-    case newTable
-    case self_
-    case add, sub, mul, mod, pow, div, iDiv
-    case bAnd, bOr, bXor
-    case shL, shR
-    case unm, bNot, not
-    case len
-    case concat
-    case jmp
-    case eq, lt, le
-    case test
-    case testSet
-    case call
-    case tailCall
-    case return_
-    case forLoop
-    case forPrep
-    case tForCall
-    case tForLoop
-    case setList
-    case closure
-    case varArg
-    case extraArg
+enum OpCodeName: String {
+    case move     = "MOVE"
+    case loadK    = "LOADK"
+    case loadKX   = "LOADKX"
+    case loadBool = "LOADBOOL"
+    case loadNil  = "LOADNIL"
+    case getUpVal = "GETUPVAL"
+    case getTabUp = "GETTABUP"
+    case getTable = "GETTABLE"
+    case setTabUp = "SETTABUP"
+    case setUpVal = "SETUPVAL"
+    case setTable = "SETTABLE"
+    case newTable = "NEWTABLE"
+    case self_    = "SELF"
+    case add      = "ADD"
+    case sub      = "SUB"
+    case mul      = "MUL"
+    case mod      = "MOD"
+    case pow      = "POW"
+    case div      = "DIV"
+    case iDiv     = "IDIV"
+    case bAnd     = "BAND"
+    case bOr      = "BOR"
+    case bXor     = "BXOR"
+    case shL      = "SHL"
+    case shR      = "SHR"
+    case unm      = "UNM"
+    case bNot     = "BNOT"
+    case not      = "NOT"
+    case len      = "LEN"
+    case concat   = "CONCAT"
+    case jmp      = "JMP"
+    case eq       = "EQ"
+    case lt       = "LT"
+    case le       = "LE"
+    case test     = "TEST"
+    case testSet  = "TESTSET"
+    case call     = "CALL"
+    case tailCall = "TAILCALL"
+    case return_  = "RETURN"
+    case forLoop  = "FORLOOP"
+    case forPrep  = "FORPREP"
+    case tForCall = "TFORCALL"
+    case tForLoop = "TFORLOOP"
+    case setList  = "SETLIST"
+    case closure  = "CLOSURE"
+    case varArg   = "VARARG"
+    case extraArg = "EXTRAARG"
 }
 
 enum OpArgMode: Int {
@@ -57,6 +77,7 @@ struct OpCode {
     let argCMode: OpArgMode // C arg mode
     let opMode: OpMode // op mode
     let name: String
+    let opCode: OpCodeName
     
     init(_ testFlag: Byte,
          _ setAFlag: Byte,
@@ -70,7 +91,9 @@ struct OpCode {
         self.argCMode = argCMode
         self.opMode = opMode
         self.name = name
+        self.opCode = OpCodeName.init(rawValue: name.trimmingCharacters(in: .whitespaces))!
     }
+    
 }
 
 var opCodes: [OpCode] =
