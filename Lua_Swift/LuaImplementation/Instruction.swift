@@ -13,6 +13,19 @@ private let MAXARG_sBx = MAXARG_Bx >> 1 // (2^18 - 1) / 2
 
 typealias Instruction = UInt32
 
+/*
+ 31       22       13       5    0
+ +-------+^------+-^-----+-^-----
+ |b=9bits |c=9bits |a=8bits|op=6|
+ +-------+^------+-^-----+-^-----
+ |    bx=18bits    |a=8bits|op=6|
+ +-------+^------+-^-----+-^-----
+ |   sbx=18bits    |a=8bits|op=6|
+ +-------+^------+-^-----+-^-----
+ |    ax=26bits            |op=6|
+ +-------+^------+-^-----+-^-----
+ 31      23      15       7      0
+ */
 
 extension Instruction {
     // 从指令中提取操作码
@@ -27,8 +40,8 @@ extension Instruction {
     // 从iABC模式指令中提取参数
     func ABC() -> (a: Int, b: Int, c: Int) {
         let a = Int(self >> 6 & 0xff)
-        let b = Int(self >> 14 & 0x1ff)
-        let c = Int(self >> 23 & 0x1ff)
+        let c = Int(self >> 14 & 0x1ff)
+        let b = Int(self >> 23 & 0x1ff)
         return (a: a, b: b, c: c)
     }
     
@@ -65,7 +78,7 @@ extension Instruction {
     
     func excute(vm: LuaVM) {
         let op = opCode
-        let action: (_ vm: LuaVM) -> Void
+        let action: ((_ vm: LuaVM) -> Void)!
         switch op.opCode {
         case .move:
             action = self.move
@@ -127,40 +140,22 @@ extension Instruction {
             action = self.forLoop(vm:)
         case .forPrep:
             action = self.forPrep(vm:)
-//        case .getUpVal:
-//            break
-//        case .setTabUp:
-//            break
-//        case .setUpVal:
-//            break
-//        case .setTable:
-//            break
-//        case .newTable:
-//            break
-//        case .self_:
-//            break
-//        case .call:
-//            break
-//        case .tailCall:
-//            break
-//        case .return_:
-//            break
-//        case .tForCall:
-//            break
-//        case .tForLoop:
-//            break
-//        case .setList:
-//            break
-//        case .closure:
-//            break
-//        case .varArg:
-//            break
-//        case .extraArg:
-//            break
-        default:
-            fatalError("not implementation")
+        case .getUpVal, .getTabUp, .getTable:
+            action = nil
+        case .setTabUp, .setUpVal, .setTable, .newTable:
+            action = nil
+        case .self_:
+            action = nil
+        case .call, .tailCall, .return_:
+            action = nil
+        case .tForCall, .tForLoop, .setList, .closure:
+            action = nil
+        case .varArg, .extraArg:
+            action = nil
         }
-        action(vm)
+        if action != nil {
+            action(vm)            
+        }
     }
 }
 

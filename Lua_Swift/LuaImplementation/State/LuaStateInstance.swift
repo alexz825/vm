@@ -293,9 +293,8 @@ extension LuaStateInstance {
         } catch let error {
             fatalError(error.localizedDescription)
         }
-        
-        
     }
+    
     func compare(idx1: Int, idx2: Int, op: CompareOperator) -> Bool {
         guard let a = self.stack.get(idx: idx1), let b = self.stack.get(idx: idx2) else {
             fatalError("error get value from stack")
