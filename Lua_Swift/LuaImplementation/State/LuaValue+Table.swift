@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-
+// TODO: 需要添加动态扩展数组内存，将map中能够移动到数组的值移过去
 struct LuaTable: LuaValueConvertible, Hashable {
     
     var type: LuaType {
@@ -19,29 +19,30 @@ struct LuaTable: LuaValueConvertible, Hashable {
     
     subscript (index: Int) -> LuaValueConvertible {
         set {
-            self[Int64(index)] = newValue
-        }
-        get {
-            return self[Int64(index)]
-        }
-    }
-    // Lua数组index从1开始
-    subscript (index: Int64) -> LuaValueConvertible {
-        set {
             if index <= self.array.count {
-                self.array[Int(index - 1)] = newValue
+                self.array[index - 1] = newValue
             } else if index == self.array.count + 1 {
                 self.array.append(newValue)
             } else {
-                fatalError("index out of boundry")
+                self.map[index] = newValue
             }
         }
         get {
             if index < self.array.count {
-                return self.array[Int(index)] as! LuaValueConvertible
+                return self.array[index] as! LuaValueConvertible
             } else {
-                fatalError("index out of boundry")
+                return self.map[index] ?? luaNil
             }
+        }
+        
+    }
+    // Lua数组index从1开始
+    subscript (index: Int64) -> LuaValueConvertible {
+        set {
+            self[Int(index)] = newValue
+        }
+        get {
+            return self[Int(index)]
         }
     }
 
