@@ -32,7 +32,7 @@ class LuaStateInstance: LuaState {
     
     func getConst(idx: Int) {
         let c = self.proto.Constants[idx]
-        if let value = c.value as? LuaValueType {
+        if let value = c.value as? LuaValueConvertible {
             self.stack.push(value: value)
         } else {
             fatalError("get constant error: \(c.value) is not a Const")
@@ -153,7 +153,7 @@ class LuaStateInstance: LuaState {
         return type == .none || type == .nil_
     }
     
-    func convertToBoolean(val: LuaValueType) -> Bool {
+    func convertToBoolean(val: LuaValueConvertible) -> Bool {
         switch val.type {
         case .nil_:
             return false
@@ -280,9 +280,9 @@ class LuaStateInstance: LuaState {
 extension LuaStateInstance {
     func arith(op: ArithOperator) {
         do {
-            let a, b: LuaValueType
+            let a, b: LuaValueConvertible
             b = self.stack.pop()
-            let result: LuaValueType
+            let result: LuaValueConvertible
             if op != .unm && op != .bNot {
                 a = self.stack.pop()
                 result = try op.action(lhs: a, rhs: b)

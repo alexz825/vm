@@ -7,7 +7,7 @@
 //
 
 struct LuaStack {
-    private(set) var slots: [LuaValueType] = []
+    private(set) var slots: [LuaValueConvertible] = []
     var top: Int {
         return self.slots.count
     }
@@ -24,7 +24,7 @@ struct LuaStack {
         }
     }
     
-    mutating func push(value: LuaValueType) {
+    mutating func push(value: LuaValueConvertible) {
         if self.top == self.size {
             fatalError("stack overflow")
         }
@@ -32,7 +32,7 @@ struct LuaStack {
     }
     
     @discardableResult
-    mutating func pop() -> LuaValueType {
+    mutating func pop() -> LuaValueConvertible {
         if self.top < 1 {
             fatalError("stack underflow")
         }
@@ -54,7 +54,7 @@ struct LuaStack {
         return absIdx > 0 && absIdx <= self.top
     }
     // 根据索引从栈里取值
-    func get(idx: Int) -> LuaValueType? {
+    func get(idx: Int) -> LuaValueConvertible? {
         let absIdx = self.absIndex(idx: idx)
         if absIdx > 0 && absIdx <= self.top {
             return self.slots[absIdx - 1]
@@ -62,7 +62,7 @@ struct LuaStack {
         return nil
     }
     // 根据索引向栈里写入值
-    mutating func set(idx: Int, val: LuaValueType) {
+    mutating func set(idx: Int, val: LuaValueConvertible) {
         let absIdx = self.absIndex(idx: idx)
         if absIdx > 0 && absIdx <= self.top {
             self.slots[absIdx - 1] = val

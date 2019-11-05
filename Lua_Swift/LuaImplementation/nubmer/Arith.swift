@@ -71,7 +71,7 @@ enum ArithOperator {
     case unm // - (unary minus)
     case bNot // ~
     
-    func action(lhs: LuaValueType, rhs: LuaValueType = luaNil) throws -> LuaValueType {
+    func action(lhs: LuaValueConvertible, rhs: LuaValueConvertible = luaNil) throws -> LuaValueConvertible {
         switch self {
         case .add:
             return try self.floatArith(lhs: lhs, rhs: rhs, operatorFunc: +)
@@ -105,7 +105,7 @@ enum ArithOperator {
         
     }
     
-    private func floatArith(lhs: LuaValueType, rhs: LuaValueType, operatorFunc: (_ lhs: Float64, _ rhs: Float64) -> Float64) throws -> LuaValueType {
+    private func floatArith(lhs: LuaValueConvertible, rhs: LuaValueConvertible, operatorFunc: (_ lhs: Float64, _ rhs: Float64) -> Float64) throws -> LuaValueConvertible {
         guard let v1 = lhs as? Arithable else {
             throw LuaError.arithError(msg: "\(rhs) is not arithable")
         }
@@ -118,7 +118,7 @@ enum ArithOperator {
         fatalError("arith error")
     }
     
-    private func intArith(lhs: LuaValueType, rhs: LuaValueType, operatorFunc: (_ lhs: Int64, _ rhs: Int64) -> Int64) throws -> LuaValueType {
+    private func intArith(lhs: LuaValueConvertible, rhs: LuaValueConvertible, operatorFunc: (_ lhs: Int64, _ rhs: Int64) -> Int64) throws -> LuaValueConvertible {
         guard let v1 = lhs as? Arithable else {
             throw LuaError.arithError(msg: "\(rhs) is not arithable")
         }
@@ -128,7 +128,7 @@ enum ArithOperator {
         return operatorFunc(try v1.int(), try v2.int())
     }
     
-    private func binaryArith(lhs: LuaValueType, rhs: LuaValueType, operatorFunc: (_ lhs: Int64, _ rhs: Int64) -> Int64) throws -> LuaValueType {
+    private func binaryArith(lhs: LuaValueConvertible, rhs: LuaValueConvertible, operatorFunc: (_ lhs: Int64, _ rhs: Int64) -> Int64) throws -> LuaValueConvertible {
         return try self.intArith(lhs: lhs, rhs: rhs, operatorFunc: operatorFunc)
 //        guard let v1 = rhs as? Arithable else {
 //            throw LuaError.arithError(msg: "\(rhs) is not arithable")
@@ -139,7 +139,7 @@ enum ArithOperator {
 //        return operatorFun(try v1.int(), try v2.int())
     }
     
-    private func binaryArith(v: LuaValueType, operatorFunc: (_ lhs: Int64) -> Int64) throws -> LuaValueType {
+    private func binaryArith(v: LuaValueConvertible, operatorFunc: (_ lhs: Int64) -> Int64) throws -> LuaValueConvertible {
         guard let value = v as? Arithable else {
             throw LuaError.arithError(msg: "\(v) is not arithable")
         }
@@ -152,7 +152,7 @@ enum CompareOperator {
     case lt // <
     case le // <=
     
-    func action(v1: LuaValueType, v2: LuaValueType) -> Bool {
+    func action(v1: LuaValueConvertible, v2: LuaValueConvertible) -> Bool {
         switch (v1.type, v2.type) {
         case (.nil_, .nil_):
             switch self {
