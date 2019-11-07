@@ -10,28 +10,52 @@ import Cocoa
 
 class LuaStateInstance: LuaState {
     var stack: LuaStack
-    private(set) var pc: Int
-    var proto: Prototype
+    var pc: Int {
+        return self.stack.pc
+    }
     
-    init(size: Int = 20, proto: Prototype) {
+    var registerCount: Int {
+        return Int(self.stack.closure.proto.MaxStackSize)
+    }
+    
+    init(size: Int = 20) {
         stack = LuaStack.init(size: size)
-        pc = 0
-        self.proto = proto
+    }
+    
+    func pushLuaStack(stack: LuaStack) {
+        stack.prev = self.stack
+        self.stack = stack
+    }
+    
+    func popLuaStack() {
+        if let prev = stack.prev {
+            let stack = self.stack
+            self.stack = prev
+            stack.prev = nil
+        } else {
+            fatalError("")
+        }
     }
     
     // 修改PC （用于实现跳转指令）
     func addPC(n: Int) {
-        self.pc += n
+        self.stack.pc += n
     }
     
     func fetch() -> UInt32 {
-        let i = self.proto.Code[self.pc]
-        self.pc += 1
+        guard self.stack.closure != nil else {
+            fatalError("no closure")
+        }
+        let i = self.stack.closure.proto.Code[self.pc]
+        self.stack.pc += 1
         return i
     }
     
     func getConst(idx: Int) {
-        let c = self.proto.Constants[idx]
+        guard self.stack.closure != nil else {
+            fatalError("no closure")
+        }
+        let c = self.stack.closure.proto.Constants[idx]
         if let value = c.value as? LuaValueConvertible {
             self.stack.push(value: value)
         } else {
@@ -332,5 +356,22 @@ extension LuaStateInstance {
             }
         }
         // TODO: n = 1
+    }
+}
+
+extension LuaStateInstance {
+    func load(nVararg n: Int) {
+        var nArgs = n
+        if nArgs < 0 {
+            nArgs = self.stack.varargs.count
+        }
+        self.stack.check(n: nArgs)
+        self.stack.pushN(vals: self.stack.varargs, n: nArgs)
+    }
+    
+    func load(proto idx: Int) {
+        let proto = self.stack.closure.proto.Protos[idx]
+        let closure = LuaClosure.init(proto: proto)
+        self.stack.push(value: closure)
     }
 }

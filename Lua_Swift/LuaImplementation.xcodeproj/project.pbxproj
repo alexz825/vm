@@ -23,6 +23,9 @@
 		60FA243A2368857B0022E5DF /* Arith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24392368857B0022E5DF /* Arith.swift */; };
 		9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1B8236BD84E00960189 /* LuaValue.swift */; };
 		9C49A1BB236C459F00960189 /* LuaVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1BA236C459F00960189 /* LuaVM.swift */; };
+		9CCA0F8523740AB400DB90F8 /* LuaClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA0F8423740AB400DB90F8 /* LuaClosure.swift */; };
+		9CCA0F872374167B00DB90F8 /* LuaState+APICall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA0F862374167B00DB90F8 /* LuaState+APICall.swift */; };
+		9CCA0F89237423AE00DB90F8 /* Instruction+Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA0F88237423AE00DB90F8 /* Instruction+Function.swift */; };
 		9CCAFFBF23717EC600DB90F8 /* LuaValue+Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCAFFBE23717EC600DB90F8 /* LuaValue+Table.swift */; };
 		9CCAFFC123726F6100DB90F8 /* LuaState+Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCAFFC023726F6100DB90F8 /* LuaState+Table.swift */; };
 /* End PBXBuildFile section */
@@ -57,6 +60,9 @@
 		60FA24392368857B0022E5DF /* Arith.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arith.swift; sourceTree = "<group>"; };
 		9C49A1B8236BD84E00960189 /* LuaValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaValue.swift; sourceTree = "<group>"; };
 		9C49A1BA236C459F00960189 /* LuaVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaVM.swift; sourceTree = "<group>"; };
+		9CCA0F8423740AB400DB90F8 /* LuaClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaClosure.swift; sourceTree = "<group>"; };
+		9CCA0F862374167B00DB90F8 /* LuaState+APICall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LuaState+APICall.swift"; sourceTree = "<group>"; };
+		9CCA0F88237423AE00DB90F8 /* Instruction+Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Instruction+Function.swift"; sourceTree = "<group>"; };
 		9CCAFFBE23717EC600DB90F8 /* LuaValue+Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LuaValue+Table.swift"; sourceTree = "<group>"; };
 		9CCAFFC023726F6100DB90F8 /* LuaState+Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LuaState+Table.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +106,7 @@
 				605F89B42359FBC9002167FC /* main.swift */,
 				60FA24242361EABD0022E5DF /* OpCodes.swift */,
 				60FA24262361F9CD0022E5DF /* Instruction.swift */,
+				9CCA0F88237423AE00DB90F8 /* Instruction+Function.swift */,
 			);
 			path = LuaImplementation;
 			sourceTree = "<group>";
@@ -112,6 +119,8 @@
 				9C49A1B8236BD84E00960189 /* LuaValue.swift */,
 				9CCAFFBE23717EC600DB90F8 /* LuaValue+Table.swift */,
 				9CCAFFC023726F6100DB90F8 /* LuaState+Table.swift */,
+				9CCA0F8423740AB400DB90F8 /* LuaClosure.swift */,
+				9CCA0F862374167B00DB90F8 /* LuaState+APICall.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -203,9 +212,12 @@
 				60FA24252361EABD0022E5DF /* OpCodes.swift in Sources */,
 				605F89B52359FBC9002167FC /* main.swift in Sources */,
 				60FA2436236741FD0022E5DF /* math.swift in Sources */,
+				9CCA0F89237423AE00DB90F8 /* Instruction+Function.swift in Sources */,
+				9CCA0F8523740AB400DB90F8 /* LuaClosure.swift in Sources */,
 				9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */,
 				60FA242F2365946C0022E5DF /* LuaState.swift in Sources */,
 				9CCAFFBF23717EC600DB90F8 /* LuaValue+Table.swift in Sources */,
+				9CCA0F872374167B00DB90F8 /* LuaState+APICall.swift in Sources */,
 				9C49A1BB236C459F00960189 /* LuaVM.swift in Sources */,
 				9CCAFFC123726F6100DB90F8 /* LuaState+Table.swift in Sources */,
 				60FA2429236482DA0022E5DF /* Api.swift in Sources */,

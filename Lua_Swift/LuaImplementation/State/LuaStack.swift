@@ -6,15 +6,22 @@
 //  Copyright © 2019 AlexZHU. All rights reserved.
 //
 
-struct LuaStack {
+class LuaStack {
     private(set) var slots: [LuaValueConvertible] = []
+    // 表示当前栈顶
     var top: Int = 0
+    
+    var prev: LuaStack? = nil
+    var closure: LuaClosure!
+    var varargs: [LuaValueConvertible] = []
+    var pc: Int = 0
     
     init(size: Int) {
         self.slots = [LuaValueConvertible].init(repeating: luaNil, count: size)
+//        self.closure = closure
     }
     
-    mutating func check(n: Int) {
+    func check(n: Int) {
         var left = self.slots.count - top
         while left < n {
             self.slots.append(luaNil)
@@ -22,7 +29,7 @@ struct LuaStack {
         }
     }
     
-    mutating func push(value: LuaValueConvertible) {
+    func push(value: LuaValueConvertible) {
         if self.top >= self.slots.count {
             fatalError("stack overflow")
         }
@@ -31,7 +38,7 @@ struct LuaStack {
     }
     
     @discardableResult
-    mutating func pop() -> LuaValueConvertible {
+    func pop() -> LuaValueConvertible {
         if self.top < 1 {
             fatalError("stack underflow")
         }
@@ -64,7 +71,7 @@ struct LuaStack {
 //        return luaNone
     }
     // 根据索引向栈里写入值
-    mutating func set(idx: Int, val: LuaValueConvertible) {
+    func set(idx: Int, val: LuaValueConvertible) {
         let absIdx = self.absIndex(idx: idx)
         if absIdx > 0 && absIdx <= self.top {
             self.slots[absIdx - 1] = val
@@ -73,8 +80,29 @@ struct LuaStack {
         fatalError("invalid index!")
     }
     
-    mutating func reverse(from idx1: Int, to idx2: Int) {
+    func reverse(from idx1: Int, to idx2: Int) {
         self.slots.replaceSubrange(idx1...idx2,
                                    with: self.slots[idx1...idx2].reversed())
+    }
+    
+    func popN(n: Int) -> [LuaValueConvertible] {
+        var vals = [LuaValueConvertible]()
+        for _ in 0..<n {
+            vals.insert(self.pop(), at: 0)
+        }
+        return vals
+    }
+    
+    func pushN(vals: [LuaValueConvertible], n: Int) {
+        let nVals = vals.count
+        var nArgs = n
+        if nArgs < 0 { nArgs = nVals }
+        for i in 0..<n {
+            if i < nVals {
+                self.push(value: vals[i])
+            } else {
+                self.push(value: luaNil)
+            }
+        }
     }
 }

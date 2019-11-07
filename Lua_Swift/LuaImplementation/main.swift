@@ -14,15 +14,17 @@ func main() {
     }
     let data = handle.readDataToEndOfFile()
 
-    let proto = BinaryChunk.undump(data: [UInt8](data))
+//    let proto = BinaryChunk.undump(data: [UInt8](data))
 //    printDetail(proto)
-    luaMain(proto: proto)
-
+//    luaMain(proto: proto)
+    let luaState = LuaStateInstance.init()
+    luaState.load(chunk: [UInt8](data), chunkName: "/Users/chenmu/Desktop/LuaSwift/test/test.lua", mode: "b")
+    luaState.call(nArgs: 0, nResults: 0)
 }
 
 func luaMain(proto: Prototype) {
     let nRegs = Int(proto.MaxStackSize)
-    let luaState = LuaStateInstance.init(size: nRegs + 8, proto: proto)
+    let luaState = LuaStateInstance.init(size: nRegs + 8)
     luaState.setTop(idx: nRegs)
     while true {
         let pc = luaState.pc

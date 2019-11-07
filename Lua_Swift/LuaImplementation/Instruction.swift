@@ -153,12 +153,18 @@ extension Instruction {
         case .setTabUp, .setUpVal:
             action = nil
         case .self_:
-            action = nil
-        case .call, .tailCall, .return_:
-            action = nil
+            action = self.self_(vm:)
+        case .call:
+            action = self.call(vm:)
+        case .tailCall:
+            action = self.tailCall(vm:)
+        case .return_:
+            action = self.return_(vm:)
         case .tForCall, .tForLoop, .closure:
             action = nil
-        case .varArg, .extraArg:
+        case .varArg:
+            action = self.vararg(vm:)
+        case .extraArg:
             action = nil
         }
         if action != nil {
@@ -409,6 +415,22 @@ extension Instruction {
         }
         
         var idx = Int64(c * LEFIELDS_PER_FLUSH)
+        
+        let bIsZero = b == 0
+        if bIsZero {
+            b = Int(vm.toInteger(idx: -1)) - a - 1
+            vm.pop(n: 1)
+            
+            for j in vm.registerCount+1...vm.getTop() {
+                idx += 1
+                vm.push(value: j)
+                vm.setI(idx: a, n: idx)
+            }
+            
+            vm.setTop(idx: vm.registerCount) // clearStack
+            return
+        }
+        
         for i in 1...b {
             idx += 1
             vm.push(value: a + i)
