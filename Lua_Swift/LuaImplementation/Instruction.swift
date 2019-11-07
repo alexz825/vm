@@ -10,7 +10,7 @@ import Cocoa
 
 private let MAXARG_Bx = (1 << 18) - 1 // 2^18 - 1
 private let MAXARG_sBx = MAXARG_Bx >> 1 // (2^18 - 1) / 2
-
+private let LEFIELDS_PER_FLUSH = 50
 typealias Instruction = UInt32
 
 /*
@@ -140,21 +140,29 @@ extension Instruction {
             action = self.forLoop(vm:)
         case .forPrep:
             action = self.forPrep(vm:)
-        case .getUpVal, .getTabUp, .getTable:
+        case .setTable:
+            action = self.setTable(vm:)
+        case .newTable:
+            action = self.newTable(vm:)
+        case .getTable:
+            action = self.getTable(vm:)
+        case .setList:
+            action = self.setList(vm:)
+        case .getUpVal, .getTabUp:
             action = nil
-        case .setTabUp, .setUpVal, .setTable, .newTable:
+        case .setTabUp, .setUpVal:
             action = nil
         case .self_:
             action = nil
         case .call, .tailCall, .return_:
             action = nil
-        case .tForCall, .tForLoop, .setList, .closure:
+        case .tForCall, .tForLoop, .closure:
             action = nil
         case .varArg, .extraArg:
             action = nil
         }
         if action != nil {
-            action(vm)            
+            action(vm)
         }
     }
 }
@@ -267,7 +275,7 @@ extension Instruction {
         
         let n = c - b + 1
         vm.checkStack(n: n)
-        for i in b..<c {
+        for i in b...c {
             vm.push(value: i)
         }
         vm.concat(n: n)
@@ -360,5 +368,78 @@ extension Instruction {
             vm.addPC(n: sBx)    // pc += sBx
             vm.copy(from: a, to: a + 3) // R(A+3)=R(A)
         }
+    }
+    
+    func newTable(vm: LuaVM) {
+        var (a, b, c) = self.ABC()
+        a += 1
+        // b c 是9位的，表示索引不够，需要用floating point byte来表示
+        vm.createTable(nArr: fb2Int(b), nRec: fb2Int(c))
+        vm.replace(idx: a)
+    }
+    
+    func getTable(vm: LuaVM) {
+        var (a, b, c) = self.ABC()
+        a += 1
+        b += 1
+        vm.getRK(rk: c)
+        vm.getTable(idx: b)
+        vm.replace(idx: a)
+    }
+    
+    func setTable(vm: LuaVM) {
+        var (a, b, c) = self.ABC()
+        a += 1
+        vm.getRK(rk: b)
+        vm.getRK(rk: c)
+        vm.setTable(idx: a)
+    }
+    
+    
+    /// SETLIST（iABC模式）专门给数组准备的，用于按索引批量设置数组元素
+    func setList(vm: LuaVM) {
+        var (a, b, c) = self.ABC()
+        a += 1
+        // c只有9个比特，用来保存数组索引肯定不够，所以用来保存批次数，用批次数乘以批大小，就可以算出数组起始索引，
+        // C操作数能表示的最大索引就扩大到了25600（50*512）
+        if c > 0 {
+            c = c - 1
+        } else { // 如果数组长度超过25600,SETLIST命令后面跟了一条EXTRAARG命令，用其Ax操作数来保存批次数。
+            c = vm.fetch().Ax()
+        }
+        
+        var idx = Int64(c * LEFIELDS_PER_FLUSH)
+        for i in 1...b {
+            idx += 1
+            vm.push(value: a + i)
+            vm.setI(idx: a, n: idx)
+        }
+    }
+}
+
+/**
+ convert an integer to a "floating point byte", represent as (eeeeexxx),
+ the real value is (1xxx) * 2 ^ (eeeee - 1) if eeeee != 0 and (xxxx) otherwise
+ */
+private func Int2fb(_ x: Int) -> Int {
+    var x = x
+    var e = 0 // exponent
+    if x < 8 { return x }
+    while x >= (8 << 4) {  // coarse steps
+        x = (x + 0xf) >> 4 // x = ceil(x / 16)
+        e += 4
+    }
+    while x >= (8 << 1) { // fine steps
+        x = (x + 1) >> 1 // x = ceil(x / 2)
+        e += 1
+    }
+    return ((e + 1) << 3) | (x - 8)
+}
+
+private func fb2Int(_ x: Int) -> Int {
+    if x < 8 {
+        return x
+    } else {
+        return ((x & 7) + 8) << UInt((x >> 3) - 1)
     }
 }

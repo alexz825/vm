@@ -66,17 +66,18 @@ class LuaStateInstance: LuaState {
     }
     
     func copy(from idx1: Int, to idx2: Int) {
-        guard let val = self.stack.get(idx: idx1) else {
+        let val = self.stack.get(idx: idx1)
+        guard val.type != .none else {
             fatalError("fromIndex no value")
         }
         self.stack.set(idx: idx2, val: val)
     }
     
     func push(value idx: Int) {
-//        guard let value = self.stack.get(idx: idx) else {
-//            fatalError("value cannot be nil")
-//        }
-        let value = self.stack.get(idx: idx) ?? luaNil
+        let value = self.stack.get(idx: idx)
+        guard value.type != .none else {
+            fatalError("idx error")
+        }
         self.stack.push(value: value)
     }
     
@@ -133,9 +134,8 @@ class LuaStateInstance: LuaState {
     
     func type(idx: Int) -> LuaType {
         if self.stack.isValid(idx: idx) {
-            if let value = self.stack.get(idx: idx) {
-                return value.type
-            }
+            let value = self.stack.get(idx: idx)
+            return value.type
         }
         return .none
     }
@@ -185,9 +185,7 @@ class LuaStateInstance: LuaState {
     }
     
     func toBoolean(idx: Int) -> Bool {
-        guard let val = self.stack.get(idx: idx) else {
-            return false
-        }
+        let val = self.stack.get(idx: idx)
         return convertToBoolean(val: val)
     }
     
@@ -197,7 +195,8 @@ class LuaStateInstance: LuaState {
     }
     
     func toIntegerX(idx: Int) -> (Int64, Bool) {
-        guard let val = self.stack.get(idx: idx) else {
+        let val = self.stack.get(idx: idx)
+        guard val.type != .none else {
             fatalError("idx of stack no value")
         }
         if let v = val as? Int64 {
@@ -212,7 +211,8 @@ class LuaStateInstance: LuaState {
     }
     
     func toNumberX(idx: Int) -> (Float64, Bool) {
-        guard let val = self.stack.get(idx: idx) else {
+        let val = self.stack.get(idx: idx)
+        guard val.type != .none else {
             fatalError("idx of stack no value")
         }
         if let f = val as? Float64 {
@@ -233,7 +233,8 @@ class LuaStateInstance: LuaState {
     }
     
     func toStringX(idx: Int) -> (String, Bool) {
-        guard let val = self.stack.get(idx: idx) else {
+        let val = self.stack.get(idx: idx)
+        guard val.type != .none else {
             fatalError("idx of stack no value")
         }
         if let s = val as? String {
@@ -296,15 +297,20 @@ extension LuaStateInstance {
     }
     
     func compare(idx1: Int, idx2: Int, op: CompareOperator) -> Bool {
-        guard let a = self.stack.get(idx: idx1), let b = self.stack.get(idx: idx2) else {
+        let a = self.stack.get(idx: idx1)
+        let b = self.stack.get(idx: idx2)
+        guard a.type != .none && b.type != .none else {
             fatalError("error get value from stack")
         }
         return op.action(v1: a, v2: b)
     }
     func len(idx: Int) {
-        guard let value = self.stack.get(idx: idx) else { fatalError("error get value from stack") }
+        let value = self.stack.get(idx: idx)
+        guard value.type != .none else { fatalError("error get value from stack") }
         if let v = value as? String {
             self.stack.push(value: Int64(v.count))
+        } else if let v = value as? LuaTable {
+            self.stack.push(value: Int64(v.len()))
         } else {
             fatalError("error get length")
         }

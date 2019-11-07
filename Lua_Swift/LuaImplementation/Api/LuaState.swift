@@ -42,4 +42,14 @@ protocol LuaState {
     func pushInteger(n: Int64)
     func pushNumber(f: Float64)
     func pushString(s: String)
+    
+    // table
+    func newTable()
+    func createTable(nArr: Int, nRec: Int)
+    func getTable(idx: Int) -> LuaType
+    func getField(idx: Int, k: String) -> LuaType
+    func getI(idx: Int, i: Int64) -> LuaType
+    func setTable(idx: Int)
+    func setField(idx: Int, k: String)
+    func setI(idx: Int, n: Int64)
 }

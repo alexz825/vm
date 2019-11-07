@@ -21,15 +21,26 @@ struct LuaTable: LuaValueConvertible, Hashable {
         set {
             if index <= self.array.count {
                 self.array[index - 1] = newValue
+                if self.array.last is Nil {
+                    self.array.removeLast()
+                }
             } else if index == self.array.count + 1 {
-                self.array.append(newValue)
+                if !(newValue is Nil) {
+                    self.array.append(newValue)
+                    var arrLen = self.array.count
+                    while self.map.keys.contains(arrLen) {
+                        self.array.append(self.map[arrLen]!)
+                        arrLen += 1
+                        self.map.removeValue(forKey: arrLen)
+                    }
+                }
             } else {
                 self.map[index] = newValue
             }
         }
         get {
-            if index < self.array.count {
-                return self.array[index] as! LuaValueConvertible
+            if index <= self.array.count {
+                return self.array[index - 1] as! LuaValueConvertible
             } else {
                 return self.map[index] ?? luaNil
             }
@@ -45,19 +56,30 @@ struct LuaTable: LuaValueConvertible, Hashable {
             return self[Int(index)]
         }
     }
+    
+    subscript (index: UInt64) -> LuaValueConvertible {
+        set {
+            self[Int(index)] = newValue
+        }
+        get {
+            return self[Int(index)]
+        }
+    }
 
     subscript (key: LuaValueConvertible) -> LuaValueConvertible {
         set {
-            
-            guard key is Nil else {
+            guard !(key is Nil) else {
                 fatalError("index cannot be nil")
             }
             
-            guard newValue is Nil else {
+            guard !(newValue is Nil) else {
                 if let k = key as? AnyHashable {
                     self.map.removeValue(forKey: k)
                 }
                 return
+            }
+            if let intK = try? (key as? Arithable)?.int() {
+                self[intK] = newValue
             }
             
             if let k = key as? AnyHashable {
@@ -69,6 +91,9 @@ struct LuaTable: LuaValueConvertible, Hashable {
         }
         
         get {
+            if let intV = try? (key as? Arithable)?.int() {
+                return self[intV]
+            }
             if let hashKey = key as? AnyHashable {
                 return map[hashKey] ?? luaNil
             }
@@ -90,5 +115,9 @@ struct LuaTable: LuaValueConvertible, Hashable {
     // TODO: LuaTable
     static func == (lhs: LuaTable, rhs: LuaTable) -> Bool {
         return false
+    }
+    
+    func len() -> Int {
+        return self.array.count
     }
 }

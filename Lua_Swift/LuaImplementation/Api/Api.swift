@@ -18,3 +18,10 @@ enum LuaType: Int {
     case userData
     case thread
 }
+
+struct LuaNone: LuaValueConvertible {
+    var type: LuaType {
+        return .none
+    }
+}
+let luaNone = LuaNone()

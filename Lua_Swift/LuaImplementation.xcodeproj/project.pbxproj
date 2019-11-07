@@ -24,6 +24,7 @@
 		9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1B8236BD84E00960189 /* LuaValue.swift */; };
 		9C49A1BB236C459F00960189 /* LuaVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1BA236C459F00960189 /* LuaVM.swift */; };
 		9CCAFFBF23717EC600DB90F8 /* LuaValue+Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCAFFBE23717EC600DB90F8 /* LuaValue+Table.swift */; };
+		9CCAFFC123726F6100DB90F8 /* LuaState+Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCAFFC023726F6100DB90F8 /* LuaState+Table.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,7 @@
 		9C49A1B8236BD84E00960189 /* LuaValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaValue.swift; sourceTree = "<group>"; };
 		9C49A1BA236C459F00960189 /* LuaVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaVM.swift; sourceTree = "<group>"; };
 		9CCAFFBE23717EC600DB90F8 /* LuaValue+Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LuaValue+Table.swift"; sourceTree = "<group>"; };
+		9CCAFFC023726F6100DB90F8 /* LuaState+Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LuaState+Table.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				60FA2430236596940022E5DF /* LuaStateInstance.swift */,
 				9C49A1B8236BD84E00960189 /* LuaValue.swift */,
 				9CCAFFBE23717EC600DB90F8 /* LuaValue+Table.swift */,
+				9CCAFFC023726F6100DB90F8 /* LuaState+Table.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				60FA242F2365946C0022E5DF /* LuaState.swift in Sources */,
 				9CCAFFBF23717EC600DB90F8 /* LuaValue+Table.swift in Sources */,
 				9C49A1BB236C459F00960189 /* LuaVM.swift in Sources */,
+				9CCAFFC123726F6100DB90F8 /* LuaState+Table.swift in Sources */,
 				60FA2429236482DA0022E5DF /* Api.swift in Sources */,
 				605F89BE2359FC11002167FC /* binary_chunk.swift in Sources */,
 				60FA243A2368857B0022E5DF /* Arith.swift in Sources */,

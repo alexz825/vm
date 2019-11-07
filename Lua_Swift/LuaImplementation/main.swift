@@ -9,7 +9,7 @@
 import Foundation
 
 func main() {
-    guard let handle = FileHandle.init(forReadingAtPath: "/Users/alexzhu/Desktop/LuaImplementation/test/luac.out") else {
+    guard let handle = FileHandle.init(forReadingAtPath: "/Users/chenmu/Desktop/LuaSwift/test/luac.out") else {
         fatalError("no file")
     }
     let data = handle.readDataToEndOfFile()
