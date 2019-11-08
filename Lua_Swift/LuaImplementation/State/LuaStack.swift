@@ -18,7 +18,6 @@ class LuaStack {
     
     init(size: Int) {
         self.slots = [LuaValueConvertible].init(repeating: luaNil, count: size)
-//        self.closure = closure
     }
     
     func check(n: Int) {
@@ -86,9 +85,9 @@ class LuaStack {
     }
     
     func popN(n: Int) -> [LuaValueConvertible] {
-        var vals = [LuaValueConvertible]()
-        for _ in 0..<n {
-            vals.insert(self.pop(), at: 0)
+        var vals = [LuaValueConvertible].init(repeating: luaNil, count: n)
+        for i in 0..<n {
+            vals[n-1-i] = self.pop()
         }
         return vals
     }
@@ -97,7 +96,7 @@ class LuaStack {
         let nVals = vals.count
         var nArgs = n
         if nArgs < 0 { nArgs = nVals }
-        for i in 0..<n {
+        for i in 0..<nArgs {
             if i < nVals {
                 self.push(value: vals[i])
             } else {

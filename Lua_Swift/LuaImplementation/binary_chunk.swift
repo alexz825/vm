@@ -72,7 +72,7 @@ struct Prototype {
     // 固定参数个数
     let NumParams: Byte
     // 是否是Vararg，0代表否，1代表是
-    let IsVarary: Byte
+    let IsVararg: Byte
     // 寄存器数量
     let MaxStackSize: Byte
     // 指令表，占4个字节

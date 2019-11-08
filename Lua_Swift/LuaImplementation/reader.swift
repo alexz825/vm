@@ -90,7 +90,7 @@ struct Reader {
                          LineDefined: self.readUInt32(),
                          LastLineDefined: self.readUInt32(),
                          NumParams: self.readByte(),
-                         IsVarary: self.readByte(),
+                         IsVararg: self.readByte(),
                          MaxStackSize: self.readByte(),
                          Code: self.readCode(),
                          Constants: self.readConstants(),

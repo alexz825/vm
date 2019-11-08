@@ -46,7 +46,7 @@ class LuaStateInstance: LuaState {
         guard self.stack.closure != nil else {
             fatalError("no closure")
         }
-        let i = self.stack.closure.proto.Code[self.pc]
+        let i = self.stack.closure.proto.Code[self.stack.pc]
         self.stack.pc += 1
         return i
     }

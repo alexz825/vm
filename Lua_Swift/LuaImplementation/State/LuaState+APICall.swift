@@ -28,13 +28,13 @@ extension LuaStateInstance {
     func callLuaClosure(nArgs: Int, nResults: Int, c: LuaClosure) {
         let nRegs = Int(c.proto.MaxStackSize)
         let nParams = Int(c.proto.NumParams)
-        let isVarags = c.proto.IsVarary == 1
+        let isVarags = c.proto.IsVararg == 1
         // 新建stack
         let newStack = LuaStack.init(size: nRegs + 20)
         newStack.closure = c
         // stack push 进参数
         let funcAndArgs = self.stack.popN(n: nArgs + 1)
-        newStack.pushN(vals: funcAndArgs, n: nParams)
+        newStack.pushN(vals: [LuaValueConvertible](funcAndArgs[0..<funcAndArgs.count]), n: nParams)
         newStack.top = nRegs
         if nArgs > nParams && isVarags {
             newStack.varargs = [LuaValueConvertible](funcAndArgs[nParams+1..<funcAndArgs.count])

@@ -76,7 +76,7 @@ func printHeader(_ proto: Prototype) {
         funcType = "function"
     }
     var varargFlag = ""
-    if proto.IsVarary > 0 { varargFlag = "+" }
+    if proto.IsVararg > 0 { varargFlag = "+" }
     
     print("\(funcType) <\(proto.Source): \(proto.LineDefined) \(proto.LastLineDefined), \(proto.Code.count)>")
     print("\(proto.NumParams) \(varargFlag) params,  \(proto.MaxStackSize) slots, \(proto.Upvalues.count) upvalues")
