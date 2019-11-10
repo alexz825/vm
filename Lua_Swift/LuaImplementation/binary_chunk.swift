@@ -39,8 +39,6 @@ struct LocVar {
 
 struct Constant: CustomStringConvertible {
     
-    struct Nil {}
-    
     enum Tag: Byte {
         case nil_ = 0x00
         case boolean = 0x01

@@ -158,10 +158,13 @@ extension Instruction {
             action = self.call(vm:)
         case .tailCall:
             action = self.tailCall(vm:)
+        case .closure:
+            action = self.closure(vm:)
         case .return_:
             action = self.return_(vm:)
-        case .tForCall, .tForLoop, .closure:
+        case .tForCall, .tForLoop:
             action = nil
+        
         case .varArg:
             action = self.vararg(vm:)
         case .extraArg:

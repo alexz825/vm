@@ -39,8 +39,10 @@ extension Instruction {
     private func popResults(a: Int, resultCount: Int, vm: LuaVM) {
         if resultCount == 1 { // no resluts
         } else if resultCount > 1 {
-            for i in (a+resultCount-2)...a {
+            var i = (a+resultCount-2)
+            while i >= a {
                 vm.replace(idx: i)
+                i -= 1
             }
         } else {
             vm.checkStack(n: 1)
@@ -55,7 +57,7 @@ extension Instruction {
         for i in a..<x {
             vm.push(value: i)
         }
-        vm.rotate(idx: vm.registerCount+1, n: x-1)
+        vm.rotate(idx: vm.registerCount+1, n: x-a)
     }
     
     func return_(vm: LuaVM) {

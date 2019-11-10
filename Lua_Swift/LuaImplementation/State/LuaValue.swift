@@ -62,7 +62,7 @@ struct Nil: CustomStringConvertible, LuaValueConvertible, Equatable {
         return "nil"
     }
     
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    static func == (lhs: Nil, rhs: Nil) -> Bool {
         return true
     }
 }

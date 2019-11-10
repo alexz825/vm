@@ -9,7 +9,8 @@
 import Foundation
 
 func main() {
-    guard let handle = FileHandle.init(forReadingAtPath: "/Users/chenmu/Desktop/LuaSwift/test/luac.out") else {
+    let path = "/Users/alexzhu/Desktop/LuaSwift/test/luac.out"
+    guard let handle = FileHandle.init(forReadingAtPath: path) else {
         fatalError("no file")
     }
     let data = handle.readDataToEndOfFile()
@@ -18,7 +19,9 @@ func main() {
 //    printDetail(proto)
 //    luaMain(proto: proto)
     let luaState = LuaStateInstance.init()
-    luaState.load(chunk: [UInt8](data), chunkName: "/Users/chenmu/Desktop/LuaSwift/test/test.lua", mode: "b")
+    let _ = luaState.load(chunk: [UInt8](data),
+                          chunkName: path,
+                          mode: "b")
     luaState.call(nArgs: 0, nResults: 0)
 }
 

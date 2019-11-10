@@ -117,7 +117,7 @@ struct Reader {
         let value: Any
         switch tag {
         case .nil_:
-             value = Constant.Nil()
+             value = luaNil
         case .boolean:
             value = self.readByte() != 0
         case .integer:

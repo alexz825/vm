@@ -80,8 +80,9 @@ class LuaStack {
     }
     
     func reverse(from idx1: Int, to idx2: Int) {
-        self.slots.replaceSubrange(idx1...idx2,
-                                   with: self.slots[idx1...idx2].reversed())
+        let range = idx1 < idx2 ? idx1...idx2 : idx2...idx1
+        self.slots.replaceSubrange(range,
+                                   with: self.slots[range].reversed())
     }
     
     func popN(n: Int) -> [LuaValueConvertible] {
