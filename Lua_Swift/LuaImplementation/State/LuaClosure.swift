@@ -9,8 +9,18 @@
 import Cocoa
 
 struct LuaClosure: LuaValueConvertible {
-    let proto: Prototype
+    private(set) var proto: Prototype! = nil// go
+    private(set) var swiftFunction: SwiftFunction! = nil // swift
     var type: LuaType {
         return .function
     }
+    
+    init(_ f: @escaping SwiftFunction) {
+        self.swiftFunction = f
+    }
+    
+    init(proto: Prototype) {
+        self.proto = proto
+    }
 }
+

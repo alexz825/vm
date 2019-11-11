@@ -25,7 +25,7 @@ extension LuaStateInstance {
         return self.getTable(t: t, k: k)
     }
     
-    private func getTable(t: LuaValueConvertible, k: LuaValueConvertible) -> LuaType {
+    func getTable(t: LuaValueConvertible, k: LuaValueConvertible) -> LuaType {
         guard let table = t as?  LuaTable else {
             fatalError("not a table")
         }
@@ -53,7 +53,7 @@ extension LuaStateInstance {
         self.setTable(t: t, k: k, v: v, tableIndex: idx)
     }
     
-    private func setTable(t: LuaValueConvertible, k: LuaValueConvertible, v: LuaValueConvertible, tableIndex: Int) {
+    func setTable(t: LuaValueConvertible, k: LuaValueConvertible, v: LuaValueConvertible, tableIndex: Int) {
         guard var table = t as? LuaTable else {
             fatalError("not a table!")
         }

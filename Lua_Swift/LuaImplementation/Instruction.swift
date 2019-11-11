@@ -148,7 +148,9 @@ extension Instruction {
             action = self.getTable(vm:)
         case .setList:
             action = self.setList(vm:)
-        case .getUpVal, .getTabUp:
+        case .getTabUp:
+            action = self.getTabUp(vm:)
+        case .getUpVal:
             action = nil
         case .setTabUp, .setUpVal:
             action = nil

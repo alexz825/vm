@@ -23,6 +23,9 @@
 		60FA243A2368857B0022E5DF /* Arith.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FA24392368857B0022E5DF /* Arith.swift */; };
 		9C49A1B9236BD84E00960189 /* LuaValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1B8236BD84E00960189 /* LuaValue.swift */; };
 		9C49A1BB236C459F00960189 /* LuaVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C49A1BA236C459F00960189 /* LuaVM.swift */; };
+		9CB87B94237904DE00A4FEE4 /* SwiftFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB87B93237904DE00A4FEE4 /* SwiftFunction.swift */; };
+		9CB87B9623793D6100A4FEE4 /* LuaState+Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB87B9523793D6100A4FEE4 /* LuaState+Global.swift */; };
+		9CB87B98237940E900A4FEE4 /* Instruction+Upvalue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB87B97237940E900A4FEE4 /* Instruction+Upvalue.swift */; };
 		9CCA0F8523740AB400DB90F8 /* LuaClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA0F8423740AB400DB90F8 /* LuaClosure.swift */; };
 		9CCA0F872374167B00DB90F8 /* LuaState+APICall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA0F862374167B00DB90F8 /* LuaState+APICall.swift */; };
 		9CCA0F89237423AE00DB90F8 /* Instruction+Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA0F88237423AE00DB90F8 /* Instruction+Function.swift */; };
@@ -60,6 +63,9 @@
 		60FA24392368857B0022E5DF /* Arith.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arith.swift; sourceTree = "<group>"; };
 		9C49A1B8236BD84E00960189 /* LuaValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaValue.swift; sourceTree = "<group>"; };
 		9C49A1BA236C459F00960189 /* LuaVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaVM.swift; sourceTree = "<group>"; };
+		9CB87B93237904DE00A4FEE4 /* SwiftFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftFunction.swift; sourceTree = "<group>"; };
+		9CB87B9523793D6100A4FEE4 /* LuaState+Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LuaState+Global.swift"; sourceTree = "<group>"; };
+		9CB87B97237940E900A4FEE4 /* Instruction+Upvalue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Instruction+Upvalue.swift"; sourceTree = "<group>"; };
 		9CCA0F8423740AB400DB90F8 /* LuaClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LuaClosure.swift; sourceTree = "<group>"; };
 		9CCA0F862374167B00DB90F8 /* LuaState+APICall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LuaState+APICall.swift"; sourceTree = "<group>"; };
 		9CCA0F88237423AE00DB90F8 /* Instruction+Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Instruction+Function.swift"; sourceTree = "<group>"; };
@@ -107,6 +113,7 @@
 				60FA24242361EABD0022E5DF /* OpCodes.swift */,
 				60FA24262361F9CD0022E5DF /* Instruction.swift */,
 				9CCA0F88237423AE00DB90F8 /* Instruction+Function.swift */,
+				9CB87B97237940E900A4FEE4 /* Instruction+Upvalue.swift */,
 			);
 			path = LuaImplementation;
 			sourceTree = "<group>";
@@ -121,6 +128,8 @@
 				9CCAFFC023726F6100DB90F8 /* LuaState+Table.swift */,
 				9CCA0F8423740AB400DB90F8 /* LuaClosure.swift */,
 				9CCA0F862374167B00DB90F8 /* LuaState+APICall.swift */,
+				9CB87B93237904DE00A4FEE4 /* SwiftFunction.swift */,
+				9CB87B9523793D6100A4FEE4 /* LuaState+Global.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -206,8 +215,10 @@
 				60FA24272361F9CD0022E5DF /* Instruction.swift in Sources */,
 				60FA2431236596940022E5DF /* LuaStateInstance.swift in Sources */,
 				605F89BD2359FC11002167FC /* reader.swift in Sources */,
+				9CB87B98237940E900A4FEE4 /* Instruction+Upvalue.swift in Sources */,
 				60FA24332365D0AC0022E5DF /* ApiAccess.swift in Sources */,
 				60FA24382367C12D0022E5DF /* parser.swift in Sources */,
+				9CB87B94237904DE00A4FEE4 /* SwiftFunction.swift in Sources */,
 				605F89C02359FDCD002167FC /* Bytes.swift in Sources */,
 				60FA24252361EABD0022E5DF /* OpCodes.swift in Sources */,
 				605F89B52359FBC9002167FC /* main.swift in Sources */,
@@ -224,6 +235,7 @@
 				605F89BE2359FC11002167FC /* binary_chunk.swift in Sources */,
 				60FA243A2368857B0022E5DF /* Arith.swift in Sources */,
 				60FA242B236563350022E5DF /* LuaStack.swift in Sources */,
+				9CB87B9623793D6100A4FEE4 /* LuaState+Global.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

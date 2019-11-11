@@ -15,9 +15,11 @@ class LuaStack {
     var closure: LuaClosure!
     var varargs: [LuaValueConvertible] = []
     var pc: Int = 0
+    weak var state: LuaStateInstance!
     
-    init(size: Int) {
+    init(size: Int, state: LuaStateInstance) {
         self.slots = [LuaValueConvertible].init(repeating: luaNil, count: size)
+        self.state = state
     }
     
     func check(n: Int) {
@@ -49,6 +51,9 @@ class LuaStack {
     
     // 把索引换成绝对索引(没有考虑索引是否有效)
     func absIndex(idx: Int) -> Int {
+        if idx <= LUA_REGISTERYINDEX { // 说明是伪索引
+            return idx
+        }
         if idx >= 0 {
             return idx
         }
@@ -57,11 +62,17 @@ class LuaStack {
     
     // 判断索引是否有效
     func isValid(idx: Int) -> Bool {
+        if idx == LUA_REGISTERYINDEX {
+            return true
+        }
         let absIdx = self.absIndex(idx: idx)
         return absIdx > 0 && absIdx <= self.top
     }
     // 根据索引从栈里取值
     func get(idx: Int) -> LuaValueConvertible {
+        if idx == LUA_REGISTERYINDEX {
+            return self.state.registry
+        }
         let absIdx = self.absIndex(idx: idx)
         if absIdx > 0 && absIdx <= self.top {
             return self.slots[absIdx - 1]
@@ -71,6 +82,14 @@ class LuaStack {
     }
     // 根据索引向栈里写入值
     func set(idx: Int, val: LuaValueConvertible) {
+        if idx == LUA_REGISTERYINDEX {
+            if let table = val as? LuaTable {
+                self.state.registry = table
+            } else {
+                fatalError("cannot set registry")
+            }
+            return
+        }
         let absIdx = self.absIndex(idx: idx)
         if absIdx > 0 && absIdx <= self.top {
             self.slots[absIdx - 1] = val

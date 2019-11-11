@@ -6,10 +6,14 @@
 //  Copyright © 2019 AlexZHU. All rights reserved.
 //
 
-import Cocoa
+let LUA_MINSTACK = 20
+let LUAI_MAXSTACK = 1000000
+let LUA_REGISTERYINDEX = -LUAI_MAXSTACK - 1000
+let LUA_RIDX_GLOBALS: Int64 = 2
 
 class LuaStateInstance: LuaState {
-    var stack: LuaStack
+    lazy var stack: LuaStack = LuaStack(size: LUA_MINSTACK, state: self)
+    var registry: LuaTable = LuaTable.init(nArr: 0, nRec: 0)
     var pc: Int {
         return self.stack.pc
     }
@@ -18,8 +22,10 @@ class LuaStateInstance: LuaState {
         return Int(self.stack.closure.proto.MaxStackSize)
     }
     
-    init(size: Int = 20) {
-        stack = LuaStack.init(size: size)
+    init() {
+        registry = LuaTable.init(nArr: 0, nRec: 0)
+        registry[LUA_RIDX_GLOBALS] = LuaTable(nArr: 0, nRec: 0)
+        
     }
     
     func pushLuaStack(stack: LuaStack) {

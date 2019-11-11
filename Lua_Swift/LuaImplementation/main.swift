@@ -9,7 +9,7 @@
 import Foundation
 
 func main() {
-    let path = "/Users/alexzhu/Desktop/LuaSwift/test/luac.out"
+    let path = "/Users/chenmu/Desktop/LuaSwift/test/luac.out"
     guard let handle = FileHandle.init(forReadingAtPath: path) else {
         fatalError("no file")
     }
@@ -18,49 +18,28 @@ func main() {
 //    let proto = BinaryChunk.undump(data: [UInt8](data))
 //    printDetail(proto)
 //    luaMain(proto: proto)
+    
     let luaState = LuaStateInstance.init()
+    luaState.register(name: "print", f: print)
     let _ = luaState.load(chunk: [UInt8](data),
                           chunkName: path,
                           mode: "b")
+    
     luaState.call(nArgs: 0, nResults: 0)
 }
 
-func luaMain(proto: Prototype) {
-    let nRegs = Int(proto.MaxStackSize)
-    let luaState = LuaStateInstance.init(size: nRegs + 8)
-    luaState.setTop(idx: nRegs)
-    while true {
-        let pc = luaState.pc
-        let inst = Instruction(luaState.fetch())
-        if inst.opCode.opCode != .return_ {
-            inst.excute(vm: luaState)
-            print("[\(pc + 1)] \(inst.opName())", terminator: "  ")
-            printStack(ls: luaState)
+func print(ls: LuaState) -> Int {
+    let nArgs = ls.getTop()
+    for i in 1...nArgs {
+        if ls.isBoolean(idx: i) {
+            print(ls.toBoolean(idx: i))
+        } else if ls.isString(idx: i) {
+            print(ls.toString(idx: i))
         } else {
-            break
+            print(ls.typeName(tp: ls.type(idx: i)))
         }
     }
-}
-
-func testArith() {
-//    let ls = LuaStateInstance()
-//    ls.pushInteger(n: 1)
-//    ls.pushString(s: "2.0")
-//    ls.pushString(s: "3.0")
-//    ls.pushNumber(f: 4.0)
-//    printStack(ls: ls)
-//
-//    ls.arith(op: .add)
-//    printStack(ls: ls)
-//    ls.arith(op: .bNot)
-//    printStack(ls: ls)
-//
-//    ls.len(idx: 2)
-//    printStack(ls: ls)
-//    ls.concat(n: 3)
-//    printStack(ls: ls)
-//    ls.pushBoolean(b: ls.compare(idx1: 1, idx2: 2, op: .eq))
-//    printStack(ls: ls)
+    return 0
 }
 
 func list(_ proto: Prototype) {

@@ -18,11 +18,15 @@ extension LuaStateInstance {
     
     func call(nArgs: Int, nResults: Int) {
         let val = self.stack.get(idx: -(nArgs + 1))
-        guard let function = val as? LuaClosure else {
+        guard let lua = val as? LuaClosure else {
             fatalError("not function!")
         }
-        print("call \(function.proto.Source) <\(function.proto.LineDefined), \(function.proto.LastLineDefined)>")
-        self.callLuaClosure(nArgs: nArgs, nResults: nResults, c: function)
+        if lua.proto != nil {
+            self.callLuaClosure(nArgs: nArgs, nResults: nResults, c: lua)
+        } else if lua.swiftFunction != nil {
+            self.callSwiftClosure(nArgs: nArgs, nResults: nResults, c: lua)
+        }
+        
     }
     
     func callLuaClosure(nArgs: Int, nResults: Int, c: LuaClosure) {
@@ -30,7 +34,7 @@ extension LuaStateInstance {
         let nParams = Int(c.proto.NumParams)
         let isVarags = c.proto.IsVararg == 1
         // 新建stack
-        let newStack = LuaStack.init(size: nRegs + 20)
+        let newStack = LuaStack.init(size: nRegs + 20, state: self)
         newStack.closure = c
         // stack push 进参数
         let funcAndArgs = self.stack.popN(n: nArgs + 1)
@@ -58,6 +62,25 @@ extension LuaStateInstance {
             if inst.opCode.opCode == .return_ {
                 break
             }
+        }
+    }
+    
+    func callSwiftClosure(nArgs: Int, nResults: Int, c: LuaClosure) {
+        let newStack = LuaStack.init(size: nArgs + 20, state: self)
+        newStack.closure = c
+        
+        let args = self.stack.popN(n: nArgs)
+        newStack.pushN(vals: args, n: nArgs)
+        self.stack.pop()
+        
+        self.pushLuaStack(stack: newStack)
+        let r = c.swiftFunction(self)
+        self.popLuaStack()
+        
+        if nResults != 0 {
+            let results = newStack.popN(n: r)
+            self.stack.check(n: results.count)
+            self.stack.pushN(vals: results, n: nResults)
         }
     }
 }
