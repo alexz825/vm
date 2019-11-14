@@ -8,7 +8,7 @@
 
 let LUA_MINSTACK = 20
 let LUAI_MAXSTACK = 1000000
-let LUA_REGISTERYINDEX = -LUAI_MAXSTACK - 1000
+let LUA_REGISTRYINDEX = -LUAI_MAXSTACK - 1000
 let LUA_RIDX_GLOBALS: Int64 = 2
 
 class LuaStateInstance: LuaState {
@@ -376,8 +376,39 @@ extension LuaStateInstance {
     }
     
     func load(proto idx: Int) {
-        let proto = self.stack.closure.proto.Protos[idx]
-        let closure = LuaClosure.init(proto: proto)
-        self.stack.push(value: closure)
+        let stack = self.stack
+        let subProto = stack.closure.proto.Protos[idx]
+        
+        var closure = LuaClosure.init(proto: subProto)
+        stack.push(value: closure)
+        for (i, upvalue) in subProto.Upvalues.enumerated() {
+            let uvIdx = Int(upvalue.Idx)
+            if upvalue.Instack == 1 {
+                if let openuv = stack.openuvs[uvIdx] {
+                    closure.upvalue.append(openuv)
+                } else {
+                    closure.upvalue.append(LuaClosureUpvalue(val: stack.slots[uvIdx]))
+                    stack.openuvs[uvIdx] = closure.upvalue[i]
+                }
+            } else {
+                if uvIdx < stack.closure.upvalue.count  {
+                    closure.upvalue.append(stack.closure.upvalue[uvIdx])
+                }
+            }
+            
+        }
+//        let proto = self.stack.closure.proto.Protos[idx]
+//        let closure = LuaClosure.init(proto: proto)
+//        self.stack.push(value: closure)
+    }
+    
+    func closeUpvalues(_ a: Int) {
+        for (i, openuv) in self.stack.openuvs {
+            if i >= a - 1 {
+//                let val = openuv.val
+//                openuv.val  = val
+                self.stack.openuvs.removeValue(forKey: i)
+            }
+        }
     }
 }

@@ -8,9 +8,14 @@
 
 import Cocoa
 
+struct LuaClosureUpvalue {
+    let val: LuaValueConvertible
+}
+
 struct LuaClosure: LuaValueConvertible {
     private(set) var proto: Prototype! = nil// go
     private(set) var swiftFunction: SwiftFunction! = nil // swift
+    var upvalue: [LuaClosureUpvalue] = []
     var type: LuaType {
         return .function
     }

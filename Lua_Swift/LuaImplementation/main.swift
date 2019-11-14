@@ -130,7 +130,7 @@ func printDetail(_ proto: Prototype) {
     
     func upvalName(prototype: Prototype, index: Int) -> String {
         // TODO: 简化
-        if proto.UpvalueNames.count > 0 {
+        if !proto.UpvalueNames.isEmpty {
             return proto.UpvalueNames[index]
         }
         return "-"

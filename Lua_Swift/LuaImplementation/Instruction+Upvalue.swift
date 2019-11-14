@@ -7,14 +7,38 @@
 //
 
 extension Instruction {
-    func getTabUp(vm: LuaVM) {
-        var (a, _, c) = self.ABC()
+    
+    func setTabUp(vm: LuaVM) {
+        var (a, b, c) = self.ABC()
         a += 1
-        vm.pushGlobalTable()
+        vm.getRK(rk: b)
         vm.getRK(rk: c)
-        vm.getTable(idx: -2)
+        
+        vm.setTable(idx: luaUpvalueIndex(a))
+    }
+    func getTabUp(vm: LuaVM) {
+        var (a, b, c) = self.ABC()
+        a += 1
+        b += 1
+
+        vm.getRK(rk: c)
+        vm.getTable(idx: luaUpvalueIndex(b))
         vm.replace(idx: a)
-        vm.pop(n: 1)
+    }
+    
+    func getUpval(vm: LuaVM) {
+        var (a, b, _) = self.ABC()
+        a += 1
+        b += 1
+        
+        vm.copy(from: luaUpvalueIndex(b), to: a)
+    }
+    
+    func setUpval(vm: LuaVM) {
+        var (a, b, _) = self.ABC()
+        a += 1
+        b += 1
+        vm.copy(from: a, to: luaUpvalueIndex(b))
     }
     
     

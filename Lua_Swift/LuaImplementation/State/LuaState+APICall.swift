@@ -6,13 +6,15 @@
 //  Copyright © 2019 AlexZHU. All rights reserved.
 //
 
-import Cocoa
-
 extension LuaStateInstance {
     func load(chunk: [Byte], chunkName: String, mode: String) -> Int {
         let proto = BinaryChunk.undump(data: chunk)
-        let c = LuaClosure.init(proto: proto)
+        var c = LuaClosure.init(proto: proto)
         self.stack.push(value: c)
+        if !proto.Upvalues.isEmpty {
+            let env = self.registry[LUA_RIDX_GLOBALS]
+            c.upvalue.append(LuaClosureUpvalue(val: env))
+        }
         return 0
     }
     

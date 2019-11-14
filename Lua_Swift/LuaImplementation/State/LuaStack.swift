@@ -14,6 +14,7 @@ class LuaStack {
     var prev: LuaStack? = nil
     var closure: LuaClosure!
     var varargs: [LuaValueConvertible] = []
+    var openuvs: [Int: LuaClosureUpvalue] = [:]
     var pc: Int = 0
     weak var state: LuaStateInstance!
     
@@ -51,7 +52,7 @@ class LuaStack {
     
     // 把索引换成绝对索引(没有考虑索引是否有效)
     func absIndex(idx: Int) -> Int {
-        if idx <= LUA_REGISTERYINDEX { // 说明是伪索引
+        if idx <= LUA_REGISTRYINDEX { // 说明是伪索引
             return idx
         }
         if idx >= 0 {
@@ -62,15 +63,32 @@ class LuaStack {
     
     // 判断索引是否有效
     func isValid(idx: Int) -> Bool {
-        if idx == LUA_REGISTERYINDEX {
+        if idx < LUA_REGISTRYINDEX {
+            let uvIdx = LUA_REGISTRYINDEX - idx - 1
+            if let c = self.closure {
+                return uvIdx < c.upvalue.count
+            } else {
+                return false
+            }
+        }
+        if idx == LUA_REGISTRYINDEX {
             return true
         }
         let absIdx = self.absIndex(idx: idx)
         return absIdx > 0 && absIdx <= self.top
     }
+    
     // 根据索引从栈里取值
     func get(idx: Int) -> LuaValueConvertible {
-        if idx == LUA_REGISTERYINDEX {
+        if idx < LUA_REGISTRYINDEX {
+            let uvIdx = LUA_REGISTRYINDEX - idx - 1
+            if let c = self.closure, uvIdx < c.upvalue.count {
+                return c.upvalue[uvIdx].val
+            } else {
+                return luaNil
+            }
+        }
+        if idx == LUA_REGISTRYINDEX {
             return self.state.registry
         }
         let absIdx = self.absIndex(idx: idx)
@@ -78,11 +96,18 @@ class LuaStack {
             return self.slots[absIdx - 1]
         }
         fatalError("error index get value")
-//        return luaNone
     }
+    
     // 根据索引向栈里写入值
     func set(idx: Int, val: LuaValueConvertible) {
-        if idx == LUA_REGISTERYINDEX {
+        if idx < LUA_REGISTRYINDEX {
+            let uvIdx = LUA_REGISTRYINDEX - idx - 1
+            if let c = self.closure, uvIdx < c.upvalue.count {
+                self.closure.upvalue[uvIdx] = LuaClosureUpvalue(val: val)
+            }
+            
+        }
+        if idx == LUA_REGISTRYINDEX {
             if let table = val as? LuaTable {
                 self.state.registry = table
             } else {

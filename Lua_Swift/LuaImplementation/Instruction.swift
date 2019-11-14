@@ -151,9 +151,11 @@ extension Instruction {
         case .getTabUp:
             action = self.getTabUp(vm:)
         case .getUpVal:
-            action = nil
-        case .setTabUp, .setUpVal:
-            action = nil
+            action = self.getUpval(vm:)
+        case .setTabUp:
+            action = self.setTabUp(vm:)
+        case .setUpVal:
+            action = self.setUpval(vm:)
         case .self_:
             action = self.self_(vm:)
         case .call:
@@ -191,7 +193,7 @@ extension Instruction {
         let (a, sBx) = self.AsBx()
         vm.addPC(n: sBx)
         if a != 0 {
-            fatalError("toto")
+            vm.closeUpvalues(a)
         }
     }
     

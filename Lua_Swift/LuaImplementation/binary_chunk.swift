@@ -79,7 +79,7 @@ struct Prototype {
     // 每个常量以1字节tag开头，用来表示后续存储的是哪种类型的常量值
     // 常用0x00 nil 不存储，0x01 bool 字节（0，1），0x03 number lua浮点，0x13 integer lua整数，0x04 string 短字符串，0x14 string 长字符串
     let Constants: [Constant]
-    // TODO: 第十章时补充
+    // 捕捉的父作用域的变量
     let Upvalues: [Upvalue]
     // 子函数原型表
     let Protos: [Prototype]

@@ -9,9 +9,12 @@
 
 typealias SwiftFunction = (_ ls: LuaState) -> Int
 
+func luaUpvalueIndex(_ i: Int) -> Int {
+    return LUA_REGISTRYINDEX - i
+}
+
 extension LuaStateInstance {
     func pushSwiftFunction(f: @escaping SwiftFunction) {
-        
         self.stack.push(value: LuaClosure.init(f))
     }
     
@@ -28,4 +31,15 @@ extension LuaStateInstance {
         }
         return val.swiftFunction
     }
+    
+    func pushSwiftClosure(f: @escaping SwiftFunction, n: Int) {
+        var closure = LuaClosure.init(f)
+        for i in 1...n {
+            let index = n - i - 1
+            let val = self.stack.pop()
+            closure.upvalue[index] = LuaClosureUpvalue(val: val)
+        }
+        self.stack.push(value: closure)
+    }
+    
 }
