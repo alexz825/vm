@@ -10,11 +10,11 @@ extension LuaStateInstance {
     func load(chunk: [Byte], chunkName: String, mode: String) -> Int {
         let proto = BinaryChunk.undump(data: chunk)
         var c = LuaClosure.init(proto: proto)
-        self.stack.push(value: c)
         if !proto.Upvalues.isEmpty {
             let env = self.registry[LUA_RIDX_GLOBALS]
             c.upvalue.append(LuaClosureUpvalue(val: env))
         }
+        self.stack.push(value: c)
         return 0
     }
     
@@ -36,11 +36,11 @@ extension LuaStateInstance {
         let nParams = Int(c.proto.NumParams)
         let isVarags = c.proto.IsVararg == 1
         // 新建stack
-        let newStack = LuaStack.init(size: nRegs + 20, state: self)
+        let newStack = LuaStack.init(size: nRegs + LUA_MINSTACK, state: self)
         newStack.closure = c
         // stack push 进参数
         let funcAndArgs = self.stack.popN(n: nArgs + 1)
-        newStack.pushN(vals: [LuaValueConvertible](funcAndArgs[0..<funcAndArgs.count]), n: nParams)
+        newStack.pushN(vals: [LuaValueConvertible](funcAndArgs[1..<funcAndArgs.count]), n: nParams)
         newStack.top = nRegs
         if nArgs > nParams && isVarags {
             newStack.varargs = [LuaValueConvertible](funcAndArgs[nParams+1..<funcAndArgs.count])

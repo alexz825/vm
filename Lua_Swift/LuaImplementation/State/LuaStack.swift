@@ -80,10 +80,10 @@ class LuaStack {
     
     // 根据索引从栈里取值
     func get(idx: Int) -> LuaValueConvertible {
-        if idx < LUA_REGISTRYINDEX {
+        if idx < LUA_REGISTRYINDEX { /* upvalues */
             let uvIdx = LUA_REGISTRYINDEX - idx - 1
             if let c = self.closure, uvIdx < c.upvalue.count {
-                return c.upvalue[uvIdx].val
+                return c.upvalue[uvIdx].val // TODO: BUG: 没有传指针，这边造成并没有改变upvalue实际的值
             } else {
                 return luaNil
             }
@@ -105,7 +105,7 @@ class LuaStack {
             if let c = self.closure, uvIdx < c.upvalue.count {
                 self.closure.upvalue[uvIdx] = LuaClosureUpvalue(val: val)
             }
-            
+            return
         }
         if idx == LUA_REGISTRYINDEX {
             if let table = val as? LuaTable {

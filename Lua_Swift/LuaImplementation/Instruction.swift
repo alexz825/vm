@@ -168,14 +168,17 @@ extension Instruction {
             action = self.return_(vm:)
         case .tForCall, .tForLoop:
             action = nil
-        
         case .varArg:
             action = self.vararg(vm:)
         case .extraArg:
             action = nil
         }
+        
         if action != nil {
+//            print(opCode.name)
             action(vm)
+        } else {
+            print(opCode.name + " no action")
         }
     }
 }

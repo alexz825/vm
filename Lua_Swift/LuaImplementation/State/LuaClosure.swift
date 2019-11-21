@@ -13,7 +13,7 @@ struct LuaClosureUpvalue {
 }
 
 struct LuaClosure: LuaValueConvertible {
-    private(set) var proto: Prototype! = nil// go
+    private(set) var proto: Prototype! = nil // lua
     private(set) var swiftFunction: SwiftFunction! = nil // swift
     var upvalue: [LuaClosureUpvalue] = []
     var type: LuaType {

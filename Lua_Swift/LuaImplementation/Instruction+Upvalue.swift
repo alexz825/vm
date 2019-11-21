@@ -11,6 +11,7 @@ extension Instruction {
     func setTabUp(vm: LuaVM) {
         var (a, b, c) = self.ABC()
         a += 1
+        
         vm.getRK(rk: b)
         vm.getRK(rk: c)
         

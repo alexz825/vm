@@ -66,7 +66,7 @@ extension Instruction {
         if b == 1 { // no return value
         } else if b > 1 { // b - 1 return values
             vm.checkStack(n: b - 1)
-            for i in a..<(a+b-2) {
+            for i in a...(a+b-2) {
                 vm.push(value: i)
             }
         } else {

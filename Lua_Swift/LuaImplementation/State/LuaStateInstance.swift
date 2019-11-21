@@ -25,7 +25,6 @@ class LuaStateInstance: LuaState {
     init() {
         registry = LuaTable.init(nArr: 0, nRec: 0)
         registry[LUA_RIDX_GLOBALS] = LuaTable(nArr: 0, nRec: 0)
-        
     }
     
     func pushLuaStack(stack: LuaStack) {
@@ -377,10 +376,9 @@ extension LuaStateInstance {
     
     func load(proto idx: Int) {
         let stack = self.stack
-        let subProto = stack.closure.proto.Protos[idx]
-        
+        let subProto = stack.closure.proto!.Protos[idx]
         var closure = LuaClosure.init(proto: subProto)
-        stack.push(value: closure)
+        
         for (i, upvalue) in subProto.Upvalues.enumerated() {
             let uvIdx = Int(upvalue.Idx)
             if upvalue.Instack == 1 {
@@ -395,11 +393,10 @@ extension LuaStateInstance {
                     closure.upvalue.append(stack.closure.upvalue[uvIdx])
                 }
             }
-            
         }
-//        let proto = self.stack.closure.proto.Protos[idx]
-//        let closure = LuaClosure.init(proto: proto)
-//        self.stack.push(value: closure)
+        stack.push(value: closure)
+
+//        let proto = self.stack.closure./get/
     }
     
     func closeUpvalues(_ a: Int) {
