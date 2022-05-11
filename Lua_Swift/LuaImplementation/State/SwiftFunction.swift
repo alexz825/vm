@@ -36,7 +36,7 @@ extension LuaStateInstance {
         var closure = LuaClosure.init(f)
         for i in 1...n {
             let index = n - i - 1
-            let val = self.stack.pop()
+            var val = self.stack.pop()
             closure.upvalue[index] = LuaClosureUpvalue(val: val)
         }
         self.stack.push(value: closure)

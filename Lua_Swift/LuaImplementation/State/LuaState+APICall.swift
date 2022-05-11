@@ -11,7 +11,7 @@ extension LuaStateInstance {
         let proto = BinaryChunk.undump(data: chunk)
         var c = LuaClosure.init(proto: proto)
         if !proto.Upvalues.isEmpty {
-            let env = self.registry[LUA_RIDX_GLOBALS]
+            var env = self.registry[LUA_RIDX_GLOBALS]
             c.upvalue.append(LuaClosureUpvalue(val: env))
         }
         self.stack.push(value: c)

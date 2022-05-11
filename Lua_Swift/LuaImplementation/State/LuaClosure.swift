@@ -10,6 +10,14 @@ import Cocoa
 
 struct LuaClosureUpvalue {
     let val: LuaValueConvertible
+    
+    init(val: inout LuaValueConvertible) {
+        self.val = val
+    }
+    
+    init(val: LuaValueConvertible) {
+        self.val = val
+    }
 }
 
 struct LuaClosure: LuaValueConvertible {

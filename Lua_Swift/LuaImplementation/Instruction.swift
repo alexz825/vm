@@ -102,6 +102,7 @@ extension Instruction {
             action = self.mod
         case .div:
             action = self.div
+            
         case .iDiv:
             action = self.iDiv(vm:)
         case .bAnd:
